@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'CookiesSupply';
+  src: url('/fonts/Cookie-Supply.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.font-cookies {
+  font-family: 'CookiesSupply', cursive;
+  text-transform: none;
+}
