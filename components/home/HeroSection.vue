@@ -7,7 +7,6 @@
       muted
       loop
       playsinline
-      controls
     />
 
     <div class="absolute inset-0 bg-gradient-to-r from-jogo-dark via-jogo-dark/65 to-jogo-dark/20"></div>
