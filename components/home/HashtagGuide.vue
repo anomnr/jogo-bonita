@@ -33,9 +33,10 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
         <article
-          v-for="(item, index) in hashtagGuides"
-          :key="item.tag"
-          class="group relative overflow-hidden rounded-2xl border border-jogo-light/15 bg-gradient-to-br from-jogo-light/10 via-jogo-light/5 to-transparent p-6 md:p-7 min-h-[230px] hover:-translate-y-1 hover:border-jogo-light/40 transition duration-300"
+            v-for="(item, index) in hashtagGuides"
+            :key="item.tag"
+            class="reveal group relative overflow-hidden rounded-2xl border border-jogo-light/15 bg-gradient-to-br from-jogo-light/10 via-jogo-light/5 to-transparent p-6 md:p-7 min-h-[230px] hover:-translate-y-1 hover:border-jogo-light/40 transition duration-300"
+            :style="{ transitionDelay: `${index * 80}ms` }"
         >
           <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-jogo-light/60 to-transparent"></div>
 
@@ -169,6 +170,27 @@ const copyHashtag = async (tag) => {
     copiedTag.value = ''
   }, 1800)
 }
+
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  const elements = document.querySelectorAll('.reveal')
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-active')
+        }
+      })
+    },
+    {
+      threshold: 0.15,
+    }
+  )
+
+  elements.forEach((el) => observer.observe(el))
+})
 </script>
 
 <style scoped>
@@ -181,3 +203,4 @@ const copyHashtag = async (tag) => {
   mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
 }
 </style>
+

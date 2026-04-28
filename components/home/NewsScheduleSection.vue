@@ -1,7 +1,7 @@
 <template>
   <main class="container mx-auto px-4 py-12">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-      <div class="lg:col-span-2">
+      <div class="lg:col-span-2 reveal">
         <div class="flex items-center justify-between border-b-2 border-jogo-light mb-6 pb-2">
           <h2 class="font-bold text-2xl uppercase tracking-wider">Berita Terbaru</h2>
 
@@ -14,8 +14,9 @@
           <div
             v-for="(item, index) in newsList"
             :key="index"
-            class="flex flex-col md:flex-row gap-4 py-3 border-b border-jogo-light/10 hover:bg-jogo-light/5 transition p-2 rounded cursor-pointer group"
-          >
+            class="reveal flex flex-col md:flex-row gap-4 py-3 border-b border-jogo-light/10 hover:bg-jogo-light/5 transition p-2 rounded cursor-pointer group"
+            :class="`reveal-delay-${index % 4 + 1}`"
+            >
             <div class="flex items-center gap-3 md:w-1/3 shrink-0">
               <span class="text-[10px] font-bold px-3 py-1 bg-jogo-light text-jogo-dark rounded-sm uppercase tracking-widest group-hover:bg-gray-300 transition">
                 {{ item.category }}
@@ -33,7 +34,7 @@
         </div>
       </div>
 
-      <div class="lg:col-span-1 overflow-hidden">
+      <div class="lg:col-span-1 overflow-hidden reveal reveal-delay-2">
         <div class="flex items-center justify-between border-b-2 border-jogo-light mb-6 pb-2">
           <div>
             <p class="text-[10px] uppercase tracking-[0.3em] text-jogo-light/45 mb-1">
@@ -119,7 +120,7 @@
           ></span>
         </div>
 
-        <div class="mt-6">
+        <div class="mt-6 reveal reveal-delay-3 rounded-2xl border border-jogo-light/15 bg-gradient-to-br from-jogo-light/10 via-jogo-light/5 to transparent p-6 md:p-8 relative overflow-hidden">
           <NuxtLink
             to="/contact"
             class="block bg-gradient-to-br from-jogo-light/12 via-jogo-light/6 to-transparent border border-jogo-light/30 rounded-2xl p-8 hover:from-jogo-light/20 transition text-center group relative overflow-hidden"

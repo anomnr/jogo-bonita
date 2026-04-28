@@ -15,15 +15,15 @@
 
     <div class="container mx-auto px-4 relative z-10 min-h-[78vh] md:min-h-[88vh] flex items-center">
       <div class="max-w-3xl pt-20 md:pt-10">
-        <p class="text-[10px] md:text-xs uppercase tracking-[0.45em] text-jogo-light/60 mb-4">
+        <p class="hero-fade text-[10px] md:text-xs uppercase tracking-[0.45em] text-jogo-light/60 mb-4">
           Official Fanbase of Christabella
         </p>
 
-        <h1 class="font-accent text-6xl md:text-8xl lg:text-9xl leading-none mb-5 drop-shadow-2xl">
+        <h1 class="hero-fade delay-1 font-accent text-6xl md:text-8xl lg:text-9xl leading-none mb-5 drop-shadow-2xl">
           Jogo Bonita
         </h1>
 
-        <p class="text-base md:text-xl text-jogo-light/80 leading-relaxed max-w-2xl mb-8">
+        <p class="hero-fade delay-2 text-base md:text-xl text-jogo-light/80 leading-relaxed max-w-2xl mb-8">
           Rumah dukungan untuk Bella JKT48. Menjaga dalam senyap, bergerak dengan rapi,
           dan merayakan setiap langkah kecilnya bersama.
         </p>
