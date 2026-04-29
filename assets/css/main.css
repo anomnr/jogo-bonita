@@ -46,3 +46,43 @@
     transform: translateY(0);
   }
 }
+
+.jb-card {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.28s ease,
+    border-color 0.28s ease,
+    background 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.jb-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(245, 247, 251, 0.16),
+      transparent 40%
+    );
+  transition: opacity 0.28s ease;
+}
+
+.jb-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 247, 251, 0.42);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+
+.jb-card:hover::before {
+  opacity: 1;
+}
+
+.jb-card > * {
+  position: relative;
+  z-index: 1;
+}

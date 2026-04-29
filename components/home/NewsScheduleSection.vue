@@ -75,7 +75,7 @@
             <div
               v-for="schedule in safeUpcomingSchedules"
               :key="schedule.id"
-              class="snap-center shrink-0 w-[88%] bg-gradient-to-br from-jogo-light/12 via-jogo-light/6 to-transparent border border-jogo-light/20 rounded-2xl p-6 hover:border-jogo-light/40 hover:-translate-y-1 transition duration-300 group flex flex-col justify-between min-h-[190px] relative overflow-hidden"
+              class="jb-card snap-center shrink-0 w-[88%] bg-gradient-to-br from-jogo-light/12 via-jogo-light/6 to-transparent border border-jogo-light/20 rounded-2xl p-6 transition duration-300 group flex flex-col justify-between min-h-[190px] relative overflow-hidden"
             >
               <div class="absolute -right-8 -bottom-10 text-[7rem] font-black leading-none text-jogo-light/5 select-none">
                 JB
@@ -123,7 +123,7 @@
         <div class="mt-6 reveal reveal-delay-3 rounded-2xl border border-jogo-light/15 bg-gradient-to-br from-jogo-light/10 via-jogo-light/5 to transparent p-6 md:p-8 relative overflow-hidden">
           <NuxtLink
             to="/contact"
-            class="block bg-gradient-to-br from-jogo-light/12 via-jogo-light/6 to-transparent border border-jogo-light/30 rounded-2xl p-8 hover:from-jogo-light/20 transition text-center group relative overflow-hidden"
+            class="jb-card block bg-gradient-to-br from-jogo-light/12 via-jogo-light/6 to-transparent border border-jogo-light/30 rounded-2xl p-8 transition text-center group relative overflow-hidden"
           >
             <div class="absolute -right-4 -top-4 w-20 h-20 bg-jogo-light/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
 
@@ -152,6 +152,9 @@ const newsList = ref([
   { title: 'Pengumuman Mengenai Project Ulang Tahun Bella JKT48 2026', category: 'Event', date: '21 April 2026' },
   { title: 'Rekap Keseruan Personal Meet and Greet Festival: LOVE DREAM PASSION', category: 'News', date: '18 April 2026' },
   { title: 'Jadwal Penjualan Tiket 2-Shot & Photocard Bulan April', category: 'Theater', date: '15 April 2026' },
+  { title: 'Update Struktur Kepengurusan Fanbase Jogo Bonita', category: 'Other', date: '10 April 2026' },
+  { title: 'Update Struktur Kepengurusan Fanbase Jogo Bonita', category: 'Other', date: '10 April 2026' },
+  { title: 'Update Struktur Kepengurusan Fanbase Jogo Bonita', category: 'Other', date: '10 April 2026' },
   { title: 'Update Struktur Kepengurusan Fanbase Jogo Bonita', category: 'Other', date: '10 April 2026' },
 ])
 
