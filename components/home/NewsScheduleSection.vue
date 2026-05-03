@@ -11,26 +11,27 @@
         </div>
 
         <div class="space-y-4">
-          <div
-            v-for="(item, index) in newsList"
+          <NuxtLink
+            v-for="(item, index) in latestNews"
             :key="index"
+            :to="`/news/${item.slug}`"
             class="reveal flex flex-col md:flex-row gap-4 py-3 border-b border-jogo-light/10 hover:bg-jogo-light/5 transition p-2 rounded cursor-pointer group"
             :class="`reveal-delay-${index % 4 + 1}`"
-            >
+          >
             <div class="flex items-center gap-3 md:w-1/3 shrink-0">
               <span class="text-[10px] font-bold px-3 py-1 bg-jogo-light text-jogo-dark rounded-sm uppercase tracking-widest group-hover:bg-gray-300 transition">
                 {{ item.category }}
               </span>
 
               <span class="text-sm font-light text-jogo-light/70">
-                {{ item.date }}
+                {{ new Date(item.created_at).toLocaleDateString('id-ID') }}
               </span>
             </div>
 
             <p class="text-sm md:text-base font-medium group-hover:underline flex-1">
               {{ item.title }}
             </p>
-          </div>
+          </NuxtLink>
         </div>
       </div>
 
@@ -120,7 +121,7 @@
           ></span>
         </div>
 
-        <div class="mt-6 reveal reveal-delay-3 rounded-2xl border border-jogo-light/15 bg-gradient-to-br from-jogo-light/10 via-jogo-light/5 to transparent p-6 md:p-8 relative overflow-hidden">
+        <div class="mt-6 reveal reveal-delay-3 rounded-2xl border border-jogo-light/15 bg-gradient-to-br from-jogo-light/10 via-jogo-light/5 to-transparent p-6 md:p-8 relative overflow-hidden">
           <NuxtLink
             to="/contact"
             class="jb-card block bg-gradient-to-br from-jogo-light/12 via-jogo-light/6 to-transparent border border-jogo-light/30 rounded-2xl p-8 transition text-center group relative overflow-hidden"
@@ -145,49 +146,109 @@
   </main>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+<script setup lang="ts">
 
-const newsList = ref([
-  { title: 'Pengumuman Mengenai Project Ulang Tahun Bella JKT48 2026', category: 'Event', date: '21 April 2026' },
-  { title: 'Rekap Keseruan Personal Meet and Greet Festival: LOVE DREAM PASSION', category: 'News', date: '18 April 2026' },
-  { title: 'Jadwal Penjualan Tiket 2-Shot & Photocard Bulan April', category: 'Theater', date: '15 April 2026' },
-  { title: 'Update Struktur Kepengurusan Fanbase Jogo Bonita', category: 'Other', date: '10 April 2026' },
-  { title: 'Update Struktur Kepengurusan Fanbase Jogo Bonita', category: 'Other', date: '10 April 2026' },
-  { title: 'Update Struktur Kepengurusan Fanbase Jogo Bonita', category: 'Other', date: '10 April 2026' },
-  { title: 'Update Struktur Kepengurusan Fanbase Jogo Bonita', category: 'Other', date: '10 April 2026' },
-])
+const supabase = useSupabaseClient()
 
-const upcomingSchedules = ref([
-  { id: 1, event_name: 'Pajama Drive', date_time: '2026-04-25T19:00:00', location: 'Teater JKT48, fX Sudirman' },
-  { id: 2, event_name: 'Aturan Anti Cinta', date_time: '2026-04-28T14:00:00', location: 'Teater JKT48, fX Sudirman' },
-  { id: 3, event_name: 'Video Call with JKT48', date_time: '2026-05-02T16:30:00', location: 'Online' },
-])
+type NewsItem = {
+  id: string
+  title: string
+  slug: string
+  category: string
+  excerpt: string | null
+  image_url: string | null
+  source_url: string | null
+  published: boolean
+  created_at: string
+}
+
+const latestNews = ref<NewsItem[]>([])
+
+const fetchNews = async () => {
+  const { data, error } = await supabase
+    .from('news')
+    .select('id, title, slug, category, excerpt, image_url, source_url, published, created_at')
+    .eq('published', true)
+    .order('created_at', { ascending: false })
+    .limit(4)
+
+  if (error) {
+    console.error('FETCH NEWS ERROR:', error)
+    return
+  }
+
+  latestNews.value = data || []
+}
+
+type ScheduleItem = {
+  id: string
+  event_name: string
+  date_time: string
+  location: string
+  type: 'SHOW' | 'EVENT'
+}
+
+const upcomingSchedules = ref<ScheduleItem[]>([])
+const slider = ref<HTMLElement | null>(null)
+
+let slideInterval: ReturnType<typeof setInterval> | null = null
+
+const today = new Date()
+today.setHours(0, 0, 0, 0)
+
+const getTodayLocalDate = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+
+  return `${year}-${month}-${day}`
+}
+
+const fetchSchedules = async () => {
+  const todayString = getTodayLocalDate()
+
+  console.log('TODAY FILTER:', todayString)
+
+  const { data, error } = await supabase
+    .from('shows')
+    .select('id, date, type, title, source')
+    .gte('date', todayString)
+    .order('date', { ascending: true })
+
+  if (error) {
+    console.error('FETCH SCHEDULES ERROR:', error)
+    return
+  }
+
+  console.log('SCHEDULE DATA:', data)
+
+  upcomingSchedules.value = (data || []).map((item) => ({
+    id: item.id,
+    event_name: item.title,
+    date_time: item.date,
+    type: item.type,
+    location: item.type === 'SHOW' ? 'Teater JKT48, fX Sudirman' : 'Event'
+  }))
+}
 
 const safeUpcomingSchedules = computed(() => {
   return Array.isArray(upcomingSchedules.value) ? upcomingSchedules.value : []
 })
 
-const formatDate = (dateString) => {
-  const options = {
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('id-ID', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }
-
-  return new Date(dateString).toLocaleString('id-ID', options)
+    year: 'numeric'
+  })
 }
 
-const slider = ref(null)
-let slideInterval = null
-
 const slideLeft = () => {
-  if (slider.value) {
-    slider.value.scrollBy({ left: -300, behavior: 'smooth' })
-  }
+  if (!slider.value) return
+
+  slider.value.scrollBy({ left: -300, behavior: 'smooth' })
 }
 
 const slideRight = () => {
@@ -217,12 +278,13 @@ const startAutoSlide = () => {
   }, 5000)
 }
 
-onMounted(() => {
-  startAutoSlide()
-})
+onMounted(async () => {
+  await Promise.all([
+    fetchNews(),
+    fetchSchedules()
+  ])
 
-onBeforeUnmount(() => {
-  stopAutoSlide()
+  startAutoSlide()
 })
 </script>
 

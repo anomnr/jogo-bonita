@@ -1,152 +1,368 @@
 <template>
-  <div class="min-h-screen bg-jogo-dark text-jogo-light font-sans py-12 px-4 selection:bg-jogo-light selection:text-jogo-dark">
-    <div class="container mx-auto max-w-7xl">
-
-      <div class="flex justify-between items-end mb-10 border-b border-jogo-light/20 pb-6">
+  <main class="min-h-screen bg-jogo-dark text-jogo-light font-sans py-12 px-4">
+    <section class="container mx-auto max-w-7xl">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 border-b border-jogo-light/15 pb-6">
         <div>
-          <h1 class="font-accent text-5xl text-jogo-light tracking-wide mb-2">Markas Penjaga</h1>
-          <p class="text-sm font-light text-jogo-light/70 uppercase tracking-widest">Dashboard Manajemen Jadwal Bonita</p>
+          <p class="text-xs uppercase tracking-[0.35em] text-jogo-light/45 mb-3">
+            Admin Area
+          </p>
+          <h1 class="font-accent text-5xl md:text-7xl tracking-wide">
+            Markas Penjaga
+          </h1>
+          <p class="mt-3 text-sm text-jogo-light/60">
+            Input manual kegiatan Bella yang belum muncul di data API.
+          </p>
         </div>
-        
-        <NuxtLink to="/" class="text-sm border border-jogo-light/30 px-4 py-2 rounded-full hover:bg-jogo-light hover:text-jogo-dark transition-all">
-          &larr; Kembali ke Stadion
+
+        <NuxtLink
+          to="/"
+          class="w-fit text-sm border border-jogo-light/25 px-5 py-2 rounded-full hover:bg-jogo-light hover:text-jogo-dark transition"
+        >
+          ← Kembali ke Stadion
         </NuxtLink>
+
+        <button
+          @click="logout"
+          class="w-fit text-sm border border-red-400/40 text-red-300 px-5 py-2 rounded-full hover:bg-red-500 hover:text-white transition"
+        >
+          Logout
+        </button>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <aside class="lg:col-span-4">
+          <div class="rounded-3xl border border-jogo-light/15 bg-jogo-light/[0.04] p-6 lg:sticky lg:top-24">
+            <h2 class="text-2xl font-black mb-2">
+              {{ editingId ? 'Edit Kegiatan' : 'Tambah Kegiatan' }}
+            </h2>
 
-        <div class="lg:col-span-4">
-          <div class="bg-jogo-light/5 backdrop-blur-md border border-jogo-light/20 p-6 rounded-2xl sticky top-24">
-            <h2 class="text-xl font-bold mb-6 border-b border-jogo-light/10 pb-2">Tambah Jadwal Baru</h2>
-            
-            <form @submit.prevent="addSchedule" class="space-y-4">
+            <p class="text-sm text-jogo-light/50 mb-6">
+              {{ editingId ? 'Ubah data kegiatan yang sudah tersimpan.' : 'Cukup isi tanggal, tipe, dan nama show/event.' }}
+            </p>
+
+            <form @submit.prevent="saveShow" class="space-y-5">
               <div>
-                <label class="block text-xs uppercase tracking-wider text-jogo-light/70 mb-1">Nama Event</label>
-                <input 
-                  v-model="form.event_name" 
-                  type="text" 
-                  required
-                  placeholder="Contoh: Pajama Drive"
-                  class="w-full bg-jogo-dark/50 border border-jogo-light/20 rounded-lg px-4 py-2 text-jogo-light placeholder:text-jogo-light/30 focus:outline-none focus:border-jogo-light transition-colors"
-                />
+                <label class="label">Tanggal</label>
+                <input v-model="form.date" type="date" required class="input" />
               </div>
 
               <div>
-                <label class="block text-xs uppercase tracking-wider text-jogo-light/70 mb-1">Tanggal & Waktu</label>
-                <input 
-                  v-model="form.date_time" 
-                  type="datetime-local" 
-                  required
-                  class="w-full bg-jogo-dark/50 border border-jogo-light/20 rounded-lg px-4 py-2 text-jogo-light focus:outline-none focus:border-jogo-light transition-colors style-calendar"
-                />
+                <label class="label">Tipe</label>
+                <select v-model="form.type" required class="input">
+                  <option value="SHOW">SHOW</option>
+                  <option value="EVENT">EVENT</option>
+                </select>
               </div>
 
               <div>
-                <label class="block text-xs uppercase tracking-wider text-jogo-light/70 mb-1">Lokasi</label>
-                <input 
-                  v-model="form.location" 
-                  type="text" 
+                <label class="label">Nama Show / Event</label>
+                <input
+                  v-model="form.title"
+                  type="text"
                   required
-                  placeholder="Contoh: Teater JKT48, fX Sudirman"
-                  class="w-full bg-jogo-dark/50 border border-jogo-light/20 rounded-lg px-4 py-2 text-jogo-light placeholder:text-jogo-light/30 focus:outline-none focus:border-jogo-light transition-colors"
+                  placeholder="Contoh: JKT48 SCHOOL"
+                  class="input"
                 />
               </div>
 
-              <button 
-                type="submit" 
-                class="w-full mt-4 bg-jogo-light text-jogo-dark font-bold py-3 rounded-xl hover:opacity-90 transition shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+              <button
+                type="submit"
+                :disabled="loading"
+                class="w-full rounded-xl bg-jogo-light text-jogo-dark font-black py-3 hover:opacity-90 transition disabled:opacity-50"
               >
-                Simpan Jadwal
+                {{ loading ? 'Menyimpan...' : editingId ? 'Update Kegiatan' : 'Simpan Kegiatan' }}
               </button>
+
+              <button
+                v-if="editingId"
+                type="button"
+                @click="cancelEdit"
+                class="w-full rounded-xl border border-jogo-light/20 text-jogo-light font-black py-3 hover:bg-jogo-light hover:text-jogo-dark transition"
+              >
+                Batal Edit
+              </button>
+
+              <p v-if="message" class="text-sm text-jogo-light/60">
+                {{ message }}
+              </p>
             </form>
           </div>
-        </div>
+        </aside>
 
-        <div class="lg:col-span-8">
-          <div class="bg-jogo-light/5 backdrop-blur-md border border-jogo-light/20 p-6 rounded-2xl">
-            <h2 class="text-xl font-bold mb-6 border-b border-jogo-light/10 pb-2">Daftar Jadwal Bonita</h2>
-            
+        <section class="lg:col-span-8">
+          <div class="rounded-3xl border border-jogo-light/15 bg-jogo-light/[0.04] p-6">
+            <div class="flex items-center justify-between gap-4 mb-6 border-b border-jogo-light/10 pb-4">
+              <div>
+                <h2 class="text-2xl font-black">
+                  Daftar Kegiatan Bella
+                </h2>
+                <p class="text-sm text-jogo-light/50 mt-1">
+                  Data dari Supabase tabel <code>shows</code>.
+                </p>
+              </div>
+
+              <button
+                @click="fetchShows"
+                class="text-xs uppercase tracking-widest border border-jogo-light/20 px-4 py-2 rounded-full hover:bg-jogo-light hover:text-jogo-dark transition"
+              >
+                Refresh
+              </button>
+            </div>
+
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse">
                 <thead>
-                  <tr class="text-xs uppercase tracking-wider text-jogo-light/50 border-b border-jogo-light/10">
-                    <th class="pb-3 font-medium">Event</th>
-                    <th class="pb-3 font-medium">Tanggal</th>
-                    <th class="pb-3 font-medium">Lokasi</th>
-                    <th class="pb-3 font-medium text-right">Aksi</th>
+                  <tr class="text-xs uppercase tracking-[0.2em] text-jogo-light/45 border-b border-jogo-light/10">
+                    <th class="pb-4 font-medium">Tanggal</th>
+                    <th class="pb-4 font-medium">Tipe</th>
+                    <th class="pb-4 font-medium">Nama</th>
+                    <th class="pb-4 font-medium">Source</th>
+                    <th class="pb-4 font-medium text-right">Aksi</th>
                   </tr>
                 </thead>
+
                 <tbody class="text-sm">
-                  <tr v-for="schedule in schedules" :key="schedule.id" class="border-b border-jogo-light/5 hover:bg-jogo-light/5 transition-colors group">
-                    <td class="py-4 font-semibold">{{ schedule.event_name }}</td>
-                    <td class="py-4 text-jogo-light/80">{{ formatDate(schedule.date_time) }}</td>
-                    <td class="py-4 text-jogo-light/80">{{ schedule.location }}</td>
+                  <tr
+                    v-for="show in shows"
+                    :key="show.id"
+                    class="border-b border-jogo-light/5 hover:bg-jogo-light/[0.04] transition"
+                  >
+                    <td class="py-4 text-jogo-light/75">
+                      {{ formatDate(show.date) }}
+                    </td>
+
+                    <td class="py-4">
+                      <span class="rounded-full border border-jogo-light/20 px-3 py-1 text-xs font-bold">
+                        {{ show.type }}
+                      </span>
+                    </td>
+
+                    <td class="py-4 font-semibold">
+                      {{ show.title }}
+                    </td>
+
+                    <td class="py-4 text-jogo-light/45">
+                      {{ show.source || 'manual' }}
+                    </td>
+
                     <td class="py-4 text-right">
-                      <button @click="deleteSchedule(schedule.id)" class="text-xs border border-red-500/50 text-red-400 px-3 py-1 rounded-full hover:bg-red-500 hover:text-white transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
-                        Hapus
-                      </button>
+                      <div class="flex justify-end gap-2">
+                        <button
+                          @click="startEdit(show)"
+                          class="text-xs border border-jogo-light/30 px-3 py-1 rounded-full hover:bg-jogo-light hover:text-jogo-dark transition"
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          @click="deleteShow(show.id)"
+                          class="text-xs border border-red-500/40 text-red-300 px-3 py-1 rounded-full hover:bg-red-500 hover:text-white transition"
+                        >
+                          Hapus
+                        </button>
+                      </div>
                     </td>
                   </tr>
-                  
-                  <tr v-if="schedules.length === 0">
-                    <td colspan="4" class="py-8 text-center text-jogo-light/40 font-light">
-                      Belum ada jadwal yang ditambahkan.
+
+                  <tr v-if="shows.length === 0">
+                    <td colspan="5" class="py-12 text-center text-jogo-light/40">
+                      Belum ada data kegiatan.
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
-
+        </section>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+definePageMeta({
+  middleware: () => {
+    const user = useSupabaseUser()
 
-// Ini adalah data reaktif sementara. Nanti Kakak tinggal ganti fungsi CRUD-nya menggunakan Supabase API.
-const schedules = ref([
-  { id: 1, event_name: 'Pajama Drive', date_time: '2026-04-25T19:00', location: 'Teater JKT48' },
-  { id: 2, event_name: 'Aturan Anti Cinta', date_time: '2026-04-28T14:00', location: 'Teater JKT48' },
-])
-
-const form = ref({
-  event_name: '',
-  date_time: '',
-  location: ''
+    if (!user.value) {
+      return navigateTo('/admin-login')
+    }
+  }
 })
 
-// Fungsi Tambah Data
-const addSchedule = () => {
-  // Logic Supabase Insert ditaruh di sini nantinya
-  const newId = schedules.value.length ? Math.max(...schedules.value.map(s => s.id)) + 1 : 1
-  schedules.value.unshift({ id: newId, ...form.value })
-  
-  // Reset Form
-  form.value = { event_name: '', date_time: '', location: '' }
+type ShowItem = {
+  id: string
+  date: string
+  type: 'SHOW' | 'EVENT'
+  title: string
+  source?: string
 }
 
-// Fungsi Hapus Data
-const deleteSchedule = (id) => {
-  // Logic Supabase Delete ditaruh di sini nantinya
-  if (confirm('Apakah kamu yakin ingin menghapus jadwal ini?')) {
-    schedules.value = schedules.value.filter(s => s.id !== id)
+const supabase = useSupabaseClient()
+
+const shows = ref<ShowItem[]>([])
+const loading = ref(false)
+const message = ref('')
+const editingId = ref<string | null>(null)
+
+const form = ref({
+  date: '',
+  type: 'SHOW' as 'SHOW' | 'EVENT',
+  title: ''
+})
+
+const resetForm = () => {
+  form.value = {
+    date: '',
+    type: 'SHOW',
+    title: ''
+  }
+
+  editingId.value = null
+}
+
+const fetchShows = async () => {
+  const { data, error } = await supabase
+    .from('shows')
+    .select('id, date, type, title, source')
+    .order('date', { ascending: false })
+
+  if (error) {
+    message.value = error.message
+    return
+  }
+
+  shows.value = data || []
+}
+
+const saveShow = async () => {
+  if (editingId.value) {
+    await updateShow()
+  } else {
+    await addShow()
   }
 }
 
-// Format Tanggal agar lebih cantik
-const formatDate = (dateString) => {
-  const options = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }
-  return new Date(dateString).toLocaleDateString('id-ID', options)
+const addShow = async () => {
+  loading.value = true
+  message.value = ''
+
+  const { error } = await supabase.from('shows').insert({
+    date: form.value.date,
+    type: form.value.type,
+    title: form.value.title.trim(),
+    source: 'manual',
+    member_name: 'Christabella Bonita'
+  })
+
+  loading.value = false
+
+  if (error) {
+    console.error('INSERT ERROR:', error)
+    message.value = error.message
+    return
+  }
+
+  message.value = 'Kegiatan berhasil disimpan.'
+  resetForm()
+  await fetchShows()
 }
+
+const startEdit = (show: ShowItem) => {
+  editingId.value = show.id
+
+  form.value = {
+    date: show.date,
+    type: show.type,
+    title: show.title
+  }
+
+  message.value = 'Mode edit aktif.'
+}
+
+const updateShow = async () => {
+  if (!editingId.value) return
+
+  loading.value = true
+  message.value = ''
+
+  const { error } = await supabase
+    .from('shows')
+    .update({
+      date: form.value.date,
+      type: form.value.type,
+      title: form.value.title.trim(),
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', editingId.value)
+
+  loading.value = false
+
+  if (error) {
+    console.error('UPDATE ERROR:', error)
+    message.value = error.message
+    return
+  }
+
+  message.value = 'Kegiatan berhasil diupdate.'
+  resetForm()
+  await fetchShows()
+}
+
+const cancelEdit = () => {
+  resetForm()
+  message.value = ''
+}
+
+const deleteShow = async (id: string) => {
+  const confirmed = confirm('Yakin mau hapus kegiatan ini?')
+  if (!confirmed) return
+
+  const { error } = await supabase
+    .from('shows')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('DELETE ERROR:', error)
+    message.value = error.message
+    return
+  }
+
+  message.value = 'Kegiatan berhasil dihapus.'
+  await fetchShows()
+}
+
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
+}
+
+const logout = async () => {
+  await supabase.auth.signOut()
+  await navigateTo('/admin-login')
+}
+
+onMounted(fetchShows)
+
+useHead({
+  title: 'Admin - Jogo Bonita'
+})
 </script>
 
 <style scoped>
-/* Sedikit styling custom untuk memperbaiki tampilan ikon kalender bawaan browser agar putih */
-.style-calendar::-webkit-calendar-picker-indicator {
+.label {
+  @apply block mb-2 text-xs uppercase tracking-[0.22em] text-jogo-light/55;
+}
+
+.input {
+  @apply w-full rounded-xl border border-jogo-light/15 bg-jogo-dark/60 px-4 py-3 text-jogo-light placeholder:text-jogo-light/30 outline-none transition focus:border-jogo-light/45;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
   filter: invert(1);
   cursor: pointer;
 }
