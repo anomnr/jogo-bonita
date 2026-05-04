@@ -29,7 +29,7 @@
               </span>
 
               <p class="mt-3 text-xs text-jogo-light/50 uppercase tracking-[0.2em]">
-                {{ item.date }}
+                {{ formatDate(item.created_at) }}
               </p>
             </div>
 
@@ -54,7 +54,34 @@
 </template>
 
 <script setup lang="ts">
-import { newsList } from '~/data/news'
+const supabase = useSupabaseClient()
+
+const newsList = ref<any[]>([])
+
+const fetchNews = async () => {
+  const { data, error } = await supabase
+    .from('news')
+    .select('*')
+    .eq('published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('FETCH NEWS ERROR:', error)
+    return
+  }
+
+  newsList.value = data || []
+}
+
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
+}
+
+onMounted(fetchNews)
 
 useHead({
   title: 'News - Jogo Bonita'

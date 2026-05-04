@@ -12,11 +12,10 @@
 
         <div class="space-y-4">
           <NuxtLink
-            v-for="(item, index) in latestNews"
-            :key="index"
+            v-for="item in latestNews"
+            :key="item.id"
             :to="`/news/${item.slug}`"
-            class="reveal flex flex-col md:flex-row gap-4 py-3 border-b border-jogo-light/10 hover:bg-jogo-light/5 transition p-2 rounded cursor-pointer group"
-            :class="`reveal-delay-${index % 4 + 1}`"
+            class="flex flex-col md:flex-row gap-4 py-3 border-b border-jogo-light/10 hover:bg-jogo-light/5 transition p-2 rounded cursor-pointer group"
           >
             <div class="flex items-center gap-3 md:w-1/3 shrink-0">
               <span class="text-[10px] font-bold px-3 py-1 bg-jogo-light text-jogo-dark rounded-sm uppercase tracking-widest group-hover:bg-gray-300 transition">
@@ -32,6 +31,12 @@
               {{ item.title }}
             </p>
           </NuxtLink>
+          <p
+            v-if="latestNews.length === 0"
+            class="text-sm text-jogo-light/50 italic py-6"
+          >
+            Belum ada berita terbaru.
+          </p>
         </div>
       </div>
 
@@ -172,7 +177,11 @@ const fetchNews = async () => {
     .order('created_at', { ascending: false })
     .limit(4)
 
+  console.log('HOMEPAGE NEWS DATA:', data)
+  console.log('HOMEPAGE NEWS ERROR:', error)
+
   if (error) {
+    alert(error.message)
     console.error('FETCH NEWS ERROR:', error)
     return
   }

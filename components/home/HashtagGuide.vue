@@ -113,6 +113,11 @@ const copiedTag = ref('')
 
 const hashtagGuides = [
   {
+    category: 'Pagi',
+    tag: '#BoNdia',
+    description: 'isi gess apa wkwk.',
+  },
+  {
     category: 'Malam',
     tag: '#BoNoite',
     description: 'Gabungan "boa noite" + "Bonita". Penutup hari yang hangat dengan identitas Bella.',
