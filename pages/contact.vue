@@ -15,11 +15,8 @@
             Jadilah bagian dari penjaga di malam Arktik. Mari bersama-sama mengawal dan mendukung setiap langkah perjalanan Bonita.
           </p>
           <div class="space-y-4">
-            <a href="#" target="_blank" class="block w-full text-center bg-jogo-light text-jogo-dark font-bold py-3 rounded-xl hover:opacity-90 transition shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-              Bergabung di WhatsApp
-            </a>
-            <a href="#" target="_blank" class="block w-full text-center border border-jogo-light text-jogo-light font-bold py-3 rounded-xl hover:bg-jogo-light hover:text-jogo-dark transition">
-              Bergabung di Discord
+            <a href="https://forms.gle/ymLXrWX6j2noxitw6" target="_blank" class="block w-full text-center bg-jogo-light text-jogo-dark font-bold py-3 rounded-xl hover:opacity-90 transition shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+              Bergabung di Komunitas Salju
             </a>
           </div>
         </div>
