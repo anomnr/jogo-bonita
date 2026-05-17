@@ -26,8 +26,7 @@
             </h1>
 
             <p class="max-w-2xl text-sm md:text-lg text-jogo-light/85 leading-relaxed">
-              Sosok yang anggun, cerah, dan memikat dalam setiap langkahnya. Halaman ini merangkum
-              profil, karakter, dan kesan yang ingin dirayakan Jogo Bonita untuk Christabella Bonita.
+              Christabella Bonita Claura Candra, panggilan akrabnya Bonbon dia adalah sosok gadis muda yang ceria dan menggembirkan.
             </p>
 
             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
