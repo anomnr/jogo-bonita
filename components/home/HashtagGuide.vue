@@ -134,7 +134,7 @@ const hashtagGuides = [
   },
   {
     category: 'Semangat & Growth',
-    tag: '#Bonitasic',
+    tag: '#Bonitastic',
     description: 'Simbol dukungan untuk perjalanan, proses, dan perkembangan Bella dari waktu ke waktu.',
   },
   {
