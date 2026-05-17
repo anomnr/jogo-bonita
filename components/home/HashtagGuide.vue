@@ -114,8 +114,8 @@ const copiedTag = ref('')
 const hashtagGuides = [
   {
     category: 'Pagi',
-    tag: '#BoNdia',
-    description: 'isi gess apa wkwk.',
+    tag: '#BonDia',
+    description: 'Ucapan Selamat Pagi dengan sentuhan identitas Bella. Awali hari dengan semangat dan dukungan untuk perjalanan Bella.',
   },
   {
     category: 'Malam',
