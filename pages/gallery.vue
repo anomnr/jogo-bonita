@@ -10,7 +10,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         
         <div v-for="(photo, index) in gallery" :key="index" class="group relative overflow-hidden rounded-xl border border-jogo-light/20 aspect-square cursor-pointer">
-          <img :src="photo.url" :alt="photo.caption" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale hover:grayscale-0" />
+          <img :src="photo.url" :alt="photo.caption" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
           
           <div class="absolute inset-0 bg-jogo-dark/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center p-6 text-center backdrop-blur-sm">
             <p class="text-jogo-light font-semibold text-lg border-b-2 border-jogo-light/50 pb-2">
@@ -32,13 +32,10 @@
 <script setup>
 import { ref } from 'vue'
 
-// Data galeri sementara. Nanti Kakak bisa ganti URL ini dengan foto asli Bella JKT48!
 const gallery = ref([
-  { url: 'https://images.unsplash.com/photo-1516961642265-531546e84af2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', caption: 'Penampilan Spesial Pajama Drive' },
-  { url: 'https://images.unsplash.com/photo-1508931134063-e380f9dc83e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', caption: 'Kejutan di Event Handshake' },
-  { url: 'https://images.unsplash.com/photo-1493225457224-b15c9b7ff731?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', caption: 'Sesi Foto Jogo Bonita' },
-  { url: 'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', caption: 'Senyum di Atas Panggung' },
-  { url: 'https://images.unsplash.com/photo-1524638431109-93d95c968f03?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', caption: 'Latihan Bersama Generasi 11' },
-  { url: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', caption: 'Menyapa Para Fans' }
+  {
+    url: '/images/christabella_bonita.jpg',
+    caption: 'Christabella Bonita'
+  }
 ])
 </script>

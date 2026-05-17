@@ -26,8 +26,14 @@
       />
 
       <!-- CONTENT -->
-      <div class="prose prose-invert max-w-none">
-        <p>{{ news.content }}</p>
+      <div class="space-y-6">
+        <p
+          v-for="(paragraph, index) in paragraphs"
+          :key="index"
+          class="text-[17px] leading-8 text-jogo-light/85 tracking-[0.01em]"
+        >
+          {{ paragraph }}
+        </p>
       </div>
 
       <!-- SOURCE -->
@@ -63,6 +69,13 @@ const { data: news } = await useAsyncData(`news-${route.params.slug}`, async () 
   }
 
   return data
+})
+
+const paragraphs = computed(() => {
+  return (news.value?.content || '')
+    .split(/\n\s*\n/)
+    .map((paragraph: string) => paragraph.trim())
+    .filter(Boolean)
 })
 
 const formatDate = (date: string) => {
