@@ -1,8 +1,9 @@
-/*
-
-import { serverSupabaseClient } from '#supabase/server'
+import { serverSupabaseServiceRole } from '#supabase/server'
+import { createError } from 'h3'
 
 const TARGET_MEMBER = 'Christabella Bonita'
+const SYNC_KEY = 'bella_jkt48_schedule_daily_sync'
+const DETAIL_DELAY_MS = 500
 
 type ScheduleItem = {
   date: string
@@ -12,7 +13,7 @@ type ScheduleItem = {
 }
 
 type Member = {
-  name: string
+  name?: string
 }
 
 type ShowData = {
@@ -22,21 +23,65 @@ type ShowData = {
   ref_code: string
 }
 
-function convertToWIBDate(dateString: string) {
-  const date = new Date(dateString)
-  date.setHours(date.getHours() + 7)
-  return date.toISOString().split('T')[0]
+function toWIBDateOnly(input: string | Date) {
+  const date = new Date(input)
+
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Jakarta',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(date)
+
+  const day = parts.find((part) => part.type === 'day')?.value
+  const month = parts.find((part) => part.type === 'month')?.value
+  const year = parts.find((part) => part.type === 'year')?.value
+
+  return `${year}-${month}-${day}`
 }
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+function isBellaMember(member: Member) {
+  const name = member.name?.toLowerCase() || ''
+
+  return (
+    name.includes('christabella') ||
+    name.includes('christabella bonita') ||
+    name.includes('bonita')
+  )
+}
+
 export default defineEventHandler(async (event) => {
-  const supabase = await serverSupabaseClient(event)
+  const supabase = serverSupabaseServiceRole(event)
 
   try {
     const now = new Date()
+    const todayWIB = toWIBDateOnly(now)
+
+    const { data: syncState, error: syncStateError } = await supabase
+      .from('sync_states')
+      .select('last_success_date, last_success_at, last_result')
+      .eq('key', SYNC_KEY)
+      .maybeSingle()
+
+    if (syncStateError) {
+      throw syncStateError
+    }
+
+    if (syncState?.last_success_date === todayWIB) {
+      return {
+        success: true,
+        skipped: true,
+        message: 'Sync hari ini sudah pernah dilakukan. Menggunakan hasil cache.',
+        last_success_at: syncState.last_success_at,
+        last_success_date: syncState.last_success_date,
+        result: syncState.last_result
+      }
+    }
+
     const month = now.getMonth() + 1
     const year = now.getFullYear()
 
@@ -58,7 +103,7 @@ export default defineEventHandler(async (event) => {
     if (!scheduleJson?.data || !Array.isArray(scheduleJson.data)) {
       throw createError({
         statusCode: 500,
-        statusMessage: 'Format data schedule tidak valid'
+        statusMessage: 'Format data schedule JKT48 tidak valid'
       })
     }
 
@@ -101,18 +146,11 @@ export default defineEventHandler(async (event) => {
           continue
         }
 
-        const isBellaThere = members.some((member: Member) => {
-          const name = member.name?.toLowerCase() || ''
-          return (
-            name.includes('christabella') ||
-            name.includes('bella') ||
-            name.includes('bonita')
-          )
-        })
+        const isBellaThere = members.some(isBellaMember)
 
         if (isBellaThere) {
           foundShows.push({
-            date: convertToWIBDate(item.date),
+            date: toWIBDateOnly(item.date),
             type: item.type,
             title: item.title,
             ref_code: refCode
@@ -122,20 +160,25 @@ export default defineEventHandler(async (event) => {
         console.error('Gagal mengambil detail:', refCode, detailError)
       }
 
-      await sleep(500)
+      await sleep(DETAIL_DELAY_MS)
     }
 
     let added = 0
     let updated = 0
 
     for (const show of foundShows) {
-      const { data: existing } = await supabase
+      const { data: existing, error: existingError } = await supabase
         .from('shows')
         .select('id')
         .eq('ref_code', show.ref_code)
         .maybeSingle()
 
-      const { error } = await supabase.from('shows').upsert(
+      if (existingError) {
+        console.error('Supabase check existing error:', existingError)
+        continue
+      }
+
+      const { error: upsertError } = await supabase.from('shows').upsert(
         {
           ref_code: show.ref_code,
           date: show.date,
@@ -149,8 +192,8 @@ export default defineEventHandler(async (event) => {
         }
       )
 
-      if (error) {
-        console.error('Supabase upsert error:', error)
+      if (upsertError) {
+        console.error('Supabase upsert error:', upsertError)
         continue
       }
 
@@ -161,8 +204,9 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    return {
+    const result = {
       success: true,
+      skipped: false,
       message: 'Sinkronisasi selesai',
       month,
       year,
@@ -172,6 +216,27 @@ export default defineEventHandler(async (event) => {
       updated,
       data: foundShows
     }
+
+    const { error: syncUpdateError } = await supabase
+      .from('sync_states')
+      .upsert(
+        {
+          key: SYNC_KEY,
+          last_success_at: new Date().toISOString(),
+          last_success_date: todayWIB,
+          last_result: result,
+          updated_at: new Date().toISOString()
+        },
+        {
+          onConflict: 'key'
+        }
+      )
+
+    if (syncUpdateError) {
+      console.error('Gagal update sync state:', syncUpdateError)
+    }
+
+    return result
   } catch (error) {
     console.error('Sync error:', error)
 
@@ -182,5 +247,3 @@ export default defineEventHandler(async (event) => {
     }
   }
 })
-
-*/
