@@ -44,6 +44,30 @@ const gallery = ref([
   {
     url: '/images/christabella_bonita2.jpg',
     caption: 'Christabella Bonita'
+  },
+  {
+    url: '/images/christabella_bonita3.jpg',
+    caption: 'Christabella Bonita'
+  },
+  {
+    url: '/images/christabella_bonita4.jpg',
+    caption: 'Christabella Bonita'
+  },
+  {
+    url: '/images/christabella_bonita5.jpg',
+    caption: 'Christabella Bonita'
+  },
+  {
+    url: '/images/christabella_bonita6.jpg',
+    caption: 'Christabella Bonita'
+  },
+  {
+    url: '/images/christabella_bonita7.jpg',
+    caption: 'Christabella Bonita'
+  },
+  {
+    url: '/images/christabella_bonita8.jpg',
+    caption: 'Christabella Bonita'
   }
 ])
 </script>

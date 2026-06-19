@@ -113,6 +113,11 @@ const copiedTag = ref('')
 
 const hashtagGuides = [
   {
+    category: 'Semua tentang Bella',
+    tag: '#Bellove',
+    description: 'hastag utama yang dipilih secara pribadi oleh Bella sebagai rumah untuk segalla bentuk dukungan, apresiasi, dan cinta dari para fans.',
+  },
+  {
     category: 'Pagi',
     tag: '#BonDia',
     description: 'Ucapan Selamat Pagi dengan sentuhan identitas Bella. Awali hari dengan semangat dan dukungan untuk perjalanan Bella.',
@@ -124,7 +129,7 @@ const hashtagGuides = [
   },
   {
     category: 'PAP Harian',
-    tag: '#RaBonita',
+    tag: '#RaBonBon',
     description: 'Terinspirasi dari hari lahir Bella, Rabu, 2 Maret 2011. Momen spesial mingguan untuk apresiasi dan posting tentang Bella.',
   },
   {
@@ -158,9 +163,19 @@ const hashtagGuides = [
     description: 'Untuk interaksi langsung bersama Bella, baik video call maupun event offline.',
   },
   {
-    category: 'Fans Squad',
-    tag: '#ReBell',
-    description: 'Identitas fans Bella yang solid, loyal, dan bergerak bersama sebagai Jogo Bonita.',
+    category: 'Momen Langsung',
+    tag: '#Bellastseen',
+    description: 'Wadah untuk mengumpulkan fancam, foto, dan berbagai momen ketika para #ReBell bertemu atau menyaksikan Bella secara langsung.',
+  },
+  {
+    category: 'Penantian Panjang',
+    tag: '#MenantiBella',
+    description: 'Hasgtag untuk menghitung setiap hari dan menyimpan harapan hingga Bella memiliki media sosialnya sendiri.',
+  },
+  {
+    category: 'Karya Tangan',
+    tag: '#Bellakit',
+    description: 'Tempat untuk menampung konten dan hasil kreatifitas Bella dan #ReBell yang berhubungan dengagn merakit atau sedang membuat sebuah karya.',
   },
 ]
 

@@ -87,6 +87,7 @@
                 JB
               </div>
 
+
               <div class="relative z-10">
                 <p class="text-[10px] uppercase tracking-[0.24em] text-jogo-light/45 mb-3">
                   {{ formatDate(schedule.date_time) }}
