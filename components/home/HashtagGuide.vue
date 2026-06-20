@@ -32,11 +32,17 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
-        <article
-            v-for="(item, index) in hashtagGuides"
-            :key="item.tag"
-            class="reveal jb-card group rounded-2xl border border-jogo-light/15 bg-gradient-to-br from-jogo-light/10 via-jogo-light/5 to-transparent p-6 md:p-7 min-h-[230px] transition duration-300"
-            :class="`reveal-delay-${(index % 4) + 1}`"
+        <component
+          :is="item.tag === '#Bellastseen' ? 'a' : 'article'"
+          v-for="(item, index) in hashtagGuides"
+          :key="item.tag"
+          :href="item.tag === '#Bellastseen' ? 'https://x.com/Jogobonita_/status/2058428087931695548?s=20' : undefined"
+          :target="item.tag === '#Bellastseen' ? '_blank' : undefined"
+          class="reveal jb-card group rounded-2xl border border-jogo-light/15 bg-gradient-to-br from-jogo-light/10 via-jogo-light/5 to-transparent p-6 md:p-7 min-h-[230px] transition duration-300"
+          :class="[
+            `reveal-delay-${(index % 4) + 1}`,
+            item.tag === '#Bellastseen' ? 'cursor-pointer block' : ''
+          ]"
         >
           <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-jogo-light/60 to-transparent"></div>
 
@@ -74,7 +80,7 @@
               </button>
             </div>
           </div>
-        </article>
+        </component>
       </div>
 
       <div class="mt-10 rounded-2xl border border-jogo-light/15 bg-jogo-light/5 p-6 md:p-8 relative overflow-hidden">
