@@ -61,7 +61,7 @@
           <div class="relative z-10 flex items-center justify-between border-b border-white/[0.08] pb-5 mb-6">
             <div>
               <p class="text-[9px] uppercase tracking-[0.3em] text-[#E2C99A] mb-1 font-bold">
-                Upcoming Stage // Supabase
+                Upcoming Stage
               </p>
               <h2 class="font-extrabold text-2xl tracking-tight">Misi Terdekat</h2>
             </div>
