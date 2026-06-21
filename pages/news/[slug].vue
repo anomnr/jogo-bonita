@@ -1,5 +1,5 @@
 <template>
-  <main v-if="news" class="min-h-screen bg-jogo-dark text-jogo-light px-6 py-20">
+  <main v-if="news" class="min-h-screen bg-transparent text-jogo-light px-6 py-20">
     <article class="max-w-3xl mx-auto">
       <!-- CATEGORY + DATE -->
       <div class="mb-6">

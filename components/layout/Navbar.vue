@@ -1,157 +1,73 @@
 <template>
-  <nav
-    class="sticky top-0 z-50 w-full border-b border-jogo-light/15 bg-jogo-dark/75 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+  <header 
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" 
+    :class="{ 
+      'py-3 bg-jogo-glass/40 backdrop-blur-2xl border-b border-white/[0.08] shadow-[0_10px_30px_0_rgba(0,0,0,0.5)]': isScrolled, 
+      'py-6 bg-transparent border-b-0': !isScrolled 
+    }"
   >
-    <div class="absolute inset-0 pointer-events-none navbar-grid"></div>
-
-    <div class="container mx-auto px-4 md:px-6 relative">
-      <div class="flex items-center justify-between py-3 md:py-4">
-        <NuxtLink to="/" class="flex items-center gap-3 group" @click="closeMenu">
-          
-          <img
-            src="/images/Tulisan-putih-versi-BG-transparan.png"
-            alt="Jogo Bonita"
-            class="h-14 md:h-24 object-contain transition duration-300 group-hover:scale-105"
-          />
-        </NuxtLink>
-
-        <div class="hidden md:flex items-center gap-2 rounded-full border border-jogo-light/15 bg-jogo-light/5 px-2 py-2">
-          <NuxtLink
-            v-for="item in navItems"
-            :key="item.to"
-            :to="item.to"
-            class="nav-link"
-            active-class="nav-link-active"
-          >
-            {{ item.label }}
-          </NuxtLink>
+    <div class="container mx-auto px-4 max-w-7xl flex items-center justify-between">
+      
+      <NuxtLink to="/" class="flex items-center gap-3 group relative cursor-pointer">
+        <div class="w-12 h-12 rounded-full bg-transparent p-1 flex items-center justify-center">
+          <img src="/images/jogobonitalogo3.png" alt="Jogo Bonita" class="w-15 h-15 object-contain" />
         </div>
+        <div class="flex flex-col">
+          <span class="font-accent text-2xl md:text-3xl tracking-wider text-white group-hover:text-jogo-cyan transition-colors drop-shadow-md">Jogo Bonita</span>
+          <span class="text-[8px] font-mono tracking-[0.25em] uppercase text-jogo-champagne -mt-1 opacity-90 font-semibold">Official Dossier</span>
+        </div>
+      </NuxtLink>
 
-        <button
-          type="button"
-          class="md:hidden w-11 h-11 rounded-xl border border-jogo-light/25 bg-jogo-light/10 text-jogo-light flex items-center justify-center shadow-lg active:scale-95 transition"
-          :aria-label="isMenuOpen ? 'Tutup menu' : 'Buka menu'"
-          :aria-expanded="isMenuOpen"
-          @click="toggleMenu"
+      <nav class="hidden md:flex items-center gap-1 bg-white/[0.02] p-1.5 rounded-full border border-white/[0.05] backdrop-blur-lg">
+        <NuxtLink 
+          v-for="link in navLinks" 
+          :key="link.path" 
+          :to="link.path"
+          class="px-5 py-2 rounded-full text-xs font-medium tracking-wider uppercase transition-all duration-300 relative text-white/70 hover:text-white hover:bg-white/[0.05]"
+          exact-active-class="!text-jogo-void !bg-jogo-cyan font-bold shadow-[0_0_20px_rgba(0,242,254,0.6)]"
         >
-          <svg
-            v-if="isMenuOpen"
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-6 h-6"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M18 6 6 18" />
-            <path d="M6 6l12 12" />
-          </svg>
+          {{ link.name }}
+        </NuxtLink>
+      </nav>
 
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-6 h-6"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M4 7h16" />
-            <path d="M4 12h16" />
-            <path d="M4 17h16" />
-          </svg>
-        </button>
+      <div class="flex items-center gap-3">
+        <NuxtLink 
+          to="/contact" 
+          class="relative px-5 py-2.5 rounded-full bg-gradient-to-r from-jogo-cyan to-jogo-teal text-jogo-void text-xs font-bold tracking-wider uppercase overflow-hidden group hover:shadow-[0_0_25px_rgba(0,242,254,0.5)] transition-all duration-500 cursor-pointer block"
+        >
+          <span class="absolute inset-0 w-full h-full bg-white/30 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+          <span class="relative flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-jogo-void animate-ping"></span>
+            ReBell Squad
+          </span>
+        </NuxtLink>
       </div>
 
-      <Transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="opacity-0 -translate-y-3 scale-95"
-        enter-to-class="opacity-100 translate-y-0 scale-100"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="opacity-100 translate-y-0 scale-100"
-        leave-to-class="opacity-0 -translate-y-3 scale-95"
-      >
-        <div v-if="isMenuOpen" class="md:hidden pb-4">
-          <div class="rounded-2xl border border-jogo-light/15 bg-jogo-dark/95 shadow-2xl overflow-hidden">
-            <NuxtLink
-              v-for="item in navItems"
-              :key="item.to"
-              :to="item.to"
-              class="flex items-center justify-between px-5 py-4 text-sm font-bold text-jogo-light/80 border-b border-jogo-light/10 last:border-b-0 hover:bg-jogo-light/10 hover:text-jogo-light transition"
-              active-class="bg-jogo-light/10 text-jogo-light"
-              @click="closeMenu"
-            >
-              <span>{{ item.label }}</span>
-              <span class="text-jogo-light/40">→</span>
-            </NuxtLink>
-          </div>
-        </div>
-      </Transition>
     </div>
-  </nav>
+  </header>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { useRoute } from '#imports'
+import { ref, onMounted, onUnmounted } from 'vue'
 
-const route = useRoute()
-const isMenuOpen = ref(false)
+const isScrolled = ref(false)
 
-const navItems = [
-  { label: 'Beranda', to: '/' },
-  { label: 'Profil', to: '/profile' },
-  { label: 'Galeri', to: '/gallery' },
-  { label: 'Kontak', to: '/contact' },
+const navLinks = [
+  { name: 'Beranda', path: '/' },
+  { name: 'Profil', path: '/profile' },
+  { name: 'Galeri', path: '/gallery' },
+  { name: 'Esports', path: '/esport' }
 ]
 
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 20
 }
 
-const closeMenu = () => {
-  isMenuOpen.value = false
-}
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
 
-watch(
-  () => route.fullPath,
-  () => {
-    closeMenu()
-  }
-)
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
-
-<style scoped>
-.navbar-grid {
-  opacity: 0.05;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-.nav-link {
-  position: relative;
-  padding: 0.65rem 1rem;
-  border-radius: 9999px;
-  color: rgba(245, 247, 251, 0.72);
-  font-size: 0.875rem;
-  font-weight: 700;
-  transition: all 0.25s ease;
-}
-
-.nav-link:hover {
-  color: #f5f7fb;
-  background: rgba(245, 247, 251, 0.08);
-}
-
-.nav-link-active {
-  color: #061a33 !important;
-  background: #f5f7fb;
-  box-shadow: 0 0 24px rgba(245, 247, 251, 0.25);
-}
-</style>

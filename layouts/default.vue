@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-jogo-dark text-jogo-light">
+  <div class="min-h-screen bg-transparent text-jogo-light">
     <LayoutNavbar />
     <slot />
     <LayoutTheFooter />

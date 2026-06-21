@@ -1,5 +1,5 @@
 <template>
-  <main class="min-h-screen bg-jogo-dark text-jogo-light font-sans py-20 px-4">
+  <main class="min-h-screen bg-transparent text-jogo-light font-sans py-20 px-4">
     <section class="container mx-auto max-w-6xl">
       <div class="text-center mb-14">
         <p class="text-[10px] md:text-xs uppercase tracking-[0.45em] text-jogo-light/50 mb-4">

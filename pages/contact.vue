@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-jogo-dark text-jogo-light font-sans py-16 px-4 selection:bg-jogo-light selection:text-jogo-dark flex flex-col justify-center">
+  <div class="min-h-screen bg-transparent text-jogo-light font-sans py-16 px-4 selection:bg-jogo-light selection:text-jogo-dark flex flex-col justify-center">
     <div class="container mx-auto max-w-4xl">
 
       <div class="text-center mb-16">

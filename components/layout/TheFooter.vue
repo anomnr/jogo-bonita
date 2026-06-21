@@ -29,6 +29,7 @@
             <NuxtLink to="/profile" class="hover:text-jogo-light transition">Profil</NuxtLink>
             <NuxtLink to="/gallery" class="hover:text-jogo-light transition">Galeri</NuxtLink>
             <NuxtLink to="/contact" class="hover:text-jogo-light transition">Kontak</NuxtLink>
+            <NuxtLink to="/esport" class="hover:text-jogo-light transition">Esports</NuxtLink>
           </div>
         </div>
 
@@ -64,11 +65,19 @@
 
 <script setup>
 const tags = [
-  '#ReBell',
-  '#Bellive',
-  '#Belltemu',
+  '#Bellove',
+  '#BonDia',
+  '#BoNoite',
+  '#RaBonBon',
   '#Bellajar',
-  '#RaBonita',
+  '#Bonitastic',
+  '#Bellive',
+  '#Belletter',
+  '#Bellagu',
+  '#Belltemu',
+  '#Bellastseen',
+  '#MenantiBella',
+  '#Bellakit',
 ]
 </script>
 

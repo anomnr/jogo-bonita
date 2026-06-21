@@ -1,5 +1,5 @@
 <template>
-  <section class="relative w-full min-h-[78vh] md:min-h-[88vh] bg-jogo-dark overflow-hidden border-b border-jogo-light/15">
+  <section class="relative w-full min-h-[78vh] md:min-h-[88vh] bg-transparent overflow-hidden border-b border-jogo-light/15">
     <video
       src="/videos/JKT48 14th Generation Profile_ Bella_1080p.mp4"
       class="absolute inset-0 w-full h-full object-cover opacity-55"

@@ -1,5 +1,5 @@
 <template>
-  <section id="hashtag-guide" class="relative bg-jogo-dark border-t border-jogo-light/10 py-16 md:py-24 overflow-hidden">
+  <section id="hashtag-guide" class="relative bg-transparent border-t border-jogo-light/10 py-16 md:py-24 overflow-hidden">
     <div class="absolute inset-0 blueprint-grid pointer-events-none"></div>
     <div class="absolute left-0 top-0 w-full h-px bg-gradient-to-r from-transparent via-jogo-light/40 to-transparent"></div>
     <div class="absolute -left-32 top-24 w-80 h-80 bg-jogo-light/5 rounded-full blur-3xl"></div>
@@ -121,7 +121,7 @@ const hashtagGuides = [
   {
     category: 'Semua tentang Bella',
     tag: '#Bellove',
-    description: 'hastag utama yang dipilih secara pribadi oleh Bella sebagai rumah untuk segalla bentuk dukungan, apresiasi, dan cinta dari para fans.',
+    description: 'Hashtag utama yang dipilih secara pribadi oleh Bella sebagai rumah untuk segala bentuk dukungan, apresiasi, dan cinta dari para fans.',
   },
   {
     category: 'Pagi',
@@ -176,12 +176,12 @@ const hashtagGuides = [
   {
     category: 'Penantian Panjang',
     tag: '#MenantiBella',
-    description: 'Hasgtag untuk menghitung setiap hari dan menyimpan harapan hingga Bella memiliki media sosialnya sendiri.',
+    description: 'Hashtag untuk menghitung setiap hari dan menyimpan harapan hingga Bella memiliki media sosialnya sendiri.',
   },
   {
     category: 'Karya Tangan',
     tag: '#Bellakit',
-    description: 'Tempat untuk menampung konten dan hasil kreatifitas Bella dan #ReBell yang berhubungan dengagn merakit atau sedang membuat sebuah karya.',
+    description: 'Tempat untuk menampung konten dan hasil kreativitas Bella dan #ReBell yang berhubungan dengan merakit atau sedang membuat sebuah karya.',
   },
 ]
 
