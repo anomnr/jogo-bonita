@@ -112,6 +112,34 @@ const roster = [
     role: 'Roamer',
     image: '/images/Roam.jpg',
     quote: 'The game is not over.'
+  },
+  {
+    ign: 'Flosolyn.',
+    name: 'Yuda',
+    role: 'Jungler',
+    image: '/images/Jungle.jpg',
+    quote: 'Bingung mirip nnael apa kairi.'
+  },
+  {
+    ign: 'C4ko',
+    name: 'Cako aselole',
+    role: 'Explaner',
+    image: '/images/Exp.jpg',
+    quote: 'kadang jago kadang kiding.'
+  },
+  {
+    ign: 'K1raline',
+    name: 'Kira',
+    role: 'Goldlaner',
+    image: '/images/Gold.jpg',
+    quote: '35,36,37,38,39 near aku menang.'
+  },
+  {
+    ign: 'Rapuyy',
+    name: 'Rafa',
+    role: 'Jungler',
+    image: '/images/Jungle.jpg',
+    quote: 'Happiness is not only about money, but togetherness can be happiness.'
   }
 ]
 </script>
