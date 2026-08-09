@@ -1,5 +1,11 @@
+/*
+UDAH KEBLOKIR CLAUDFARE ANJENG
+*/
+
 import { serverSupabaseServiceRole } from '#supabase/server'
 import { createError } from 'h3'
+
+
 
 const TARGET_MEMBER = 'Christabella Bonita'
 const SYNC_KEY = 'bella_jkt48_schedule_daily_sync'
@@ -95,6 +101,21 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 500,
         statusMessage: 'Gagal mengambil data schedule JKT48'
+      })
+    }
+
+    const contentType = scheduleRes.headers.get('content-type')
+    if (contentType && contentType.includes('text/html')) {
+      const text = await scheduleRes.text()
+      if (text.includes('Cloudflare') || text.includes('Just a moment')) {
+        throw createError({
+          statusCode: 503,
+          statusMessage: 'Diblokir oleh proteksi Cloudflare JKT48'
+        })
+      }
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Format response bukan JSON (mungkin diblokir server)'
       })
     }
 

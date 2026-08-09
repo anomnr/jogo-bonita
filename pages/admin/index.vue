@@ -351,13 +351,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: () => {
-    const user = useSupabaseUser()
-
-    if (!user.value) {
-      return navigateTo('/admin-login')
-    }
-  }
+  middleware: 'auth'
 })
 
 type ShowItem = {
@@ -665,7 +659,7 @@ const formatDate = (date: string) => {
 
 const logout = async () => {
   await supabase.auth.signOut()
-  await navigateTo('/admin-login')
+  await navigateTo('/admin/login')
 }
 
 onMounted(async () => {
