@@ -2,26 +2,26 @@
   <main class="min-h-screen bg-black text-white pb-20">
     
     <!-- Top Navigation Bar -->
-    <header class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5 px-4 py-4 flex items-center justify-between">
-      <NuxtLink to="/comic" class="flex items-center text-white/60 hover:text-white transition-colors gap-2 group">
-        <div class="p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <header class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5 px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
+      <NuxtLink to="/comic" class="flex items-center text-white/60 hover:text-white transition-colors gap-2 group shrink-0">
+        <div class="p-1.5 sm:p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </div>
-        <span class="hidden sm:inline font-medium tracking-wide">Kembali ke Daftar</span>
+        <span class="hidden sm:inline font-medium tracking-wide text-sm">Kembali</span>
       </NuxtLink>
       
-      <h1 class="text-lg font-bold tracking-widest uppercase">
+      <h1 class="text-sm sm:text-lg font-bold tracking-widest uppercase text-center">
         Bab {{ currentId }}
       </h1>
       
-      <!-- Placeholder to keep center aligned -->
-      <div class="w-[104px] sm:w-[170px]"></div> 
+      <!-- Spacer — matches back button width to keep title centered -->
+      <div class="w-[36px] sm:w-[110px] shrink-0"></div> 
     </header>
 
     <!-- Comic Viewer -->
-    <section class="w-full max-w-4xl mx-auto px-0 sm:px-4 mt-8 flex justify-center min-h-[50vh]">
+    <section class="w-full max-w-4xl mx-auto px-2 sm:px-4 mt-4 sm:mt-8 flex justify-center min-h-[50vh]">
       <NuxtImg 
         provider="cloudinary"
         :src="`Episode_${currentId}.png`" 
@@ -34,23 +34,23 @@
     </section>
 
     <!-- Bottom Navigation -->
-    <nav class="max-w-4xl mx-auto px-4 mt-12 flex justify-between items-center gap-4">
+    <nav class="max-w-4xl mx-auto px-3 sm:px-4 mt-8 sm:mt-12 flex justify-between items-center gap-3">
       <!-- Previous Button -->
       <NuxtLink 
         v-if="hasPrev"
         :to="prevLink" 
-        class="flex-1 flex justify-center items-center py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold transition-all"
+        class="flex-1 flex justify-center items-center py-3 sm:py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold transition-all text-sm sm:text-base min-h-[48px]"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
         Prev
       </NuxtLink>
       <div 
         v-else
-        class="flex-1 flex justify-center items-center py-4 rounded-xl bg-white/[0.02] border border-white/5 text-white/30 font-bold cursor-not-allowed"
+        class="flex-1 flex justify-center items-center py-3 sm:py-4 rounded-xl bg-white/[0.02] border border-white/5 text-white/30 font-bold cursor-not-allowed text-sm sm:text-base min-h-[48px]"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
         Prev
@@ -60,16 +60,16 @@
       <NuxtLink 
         v-if="hasNext"
         :to="nextLink" 
-        class="flex-1 flex justify-center items-center py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold transition-all"
+        class="flex-1 flex justify-center items-center py-3 sm:py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold transition-all text-sm sm:text-base min-h-[48px]"
       >
         Next
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 ml-1.5 sm:ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </NuxtLink>
       <div 
         v-else
-        class="flex-1 flex justify-center items-center py-4 rounded-xl bg-white/[0.02] border border-white/5 text-white/30 font-bold cursor-not-allowed"
+        class="flex-1 flex justify-center items-center py-3 sm:py-4 rounded-xl bg-white/[0.02] border border-white/5 text-white/30 font-bold cursor-not-allowed text-sm sm:text-base min-h-[48px]"
       >
         Mentok Raw
       </div>
