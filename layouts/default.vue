@@ -1,7 +1,9 @@
 <template>
-  <div class="min-h-screen bg-transparent text-jogo-light">
+  <div class="min-h-screen flex flex-col bg-transparent text-jogo-light">
     <LayoutNavbar />
-    <slot />
+    <div class="flex-1 flex flex-col">
+      <slot />
+    </div>
     <LayoutTheFooter />
   </div>
 </template>

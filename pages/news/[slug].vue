@@ -1,50 +1,56 @@
 <template>
-  <main v-if="news" class="min-h-screen bg-transparent text-jogo-light px-6 py-20">
-    <article class="max-w-3xl mx-auto">
-      <!-- CATEGORY + DATE -->
-      <div class="mb-6">
-        <span class="text-xs uppercase tracking-widest bg-jogo-light text-jogo-dark px-3 py-1 rounded">
-          {{ news.category || 'News' }}
-        </span>
+  <main v-if="news" class="min-h-screen bg-transparent text-jogo-light pt-24 pb-20">
+    <article class="mx-auto max-w-[1400px] px-5 md:px-8">
 
-        <p class="text-sm text-jogo-light/60 mt-3">
-          {{ formatDate(news.created_at) }}
-        </p>
+      <!-- Back link -->
+      <NuxtLink to="/news" class="inline-flex items-center gap-2 text-[11px] font-mono text-white/35 hover:text-white/60 transition-colors mb-8 uppercase tracking-wider">
+        &larr; Semua Berita
+      </NuxtLink>
+
+      <!-- Article header -->
+      <div class="max-w-3xl mb-10">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-[10px] font-mono font-semibold uppercase tracking-widest bg-teal-400/[0.08] border border-teal-400/[0.15] text-teal-400/80 px-2.5 py-1 rounded-lg">
+            {{ news.category || 'News' }}
+          </span>
+          <span class="text-xs font-mono text-white/35">
+            {{ formatDate(news.created_at) }}
+          </span>
+        </div>
+
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.1] text-white mb-6">
+          {{ news.title }}
+        </h1>
       </div>
 
-      <!-- TITLE -->
-      <h1 class="text-4xl md:text-5xl font-black mb-6 leading-tight">
-        {{ news.title }}
-      </h1>
-
-      <!-- IMAGE -->
+      <!-- Hero image -->
       <img
         v-if="news.image_url"
         :src="news.image_url"
         :alt="news.title"
-        class="w-full rounded-xl mb-8"
+        class="w-full max-w-4xl rounded-xl mb-10"
       />
 
-      <!-- CONTENT -->
-      <div class="space-y-6">
+      <!-- Article body -->
+      <div class="max-w-3xl space-y-6">
         <p
           v-for="(paragraph, index) in paragraphs"
           :key="index"
-          class="text-[17px] leading-8 text-jogo-light/85 tracking-[0.01em]"
+          class="text-base md:text-[17px] leading-8 text-white/75 tracking-[0.01em]"
         >
           {{ paragraph }}
         </p>
       </div>
 
-      <!-- SOURCE -->
+      <!-- Source link -->
       <a
         v-if="news.source_url"
         :href="news.source_url"
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-block mt-10 text-sm underline opacity-70 hover:opacity-100"
+        class="inline-flex items-center gap-2 mt-10 text-sm text-white/40 hover:text-white/70 transition-colors border-b border-white/[0.08] pb-0.5"
       >
-        Sumber asli →
+        Sumber asli &rarr;
       </a>
     </article>
   </main>

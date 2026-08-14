@@ -5,40 +5,40 @@
   --jogo-soft-blue: #dbeafe;
 }
 
-/* BASE STATE */
+/* =============================================
+   SCROLL-REVEAL SYSTEM (shared across pages)
+   ============================================= */
 .reveal {
   opacity: 0;
-  transform: translateY(40px) scale(0.96);
-  filter: blur(6px);
+  transform: translateY(32px);
   transition:
     opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.7s ease;
-  will-change: opacity, transform, filter;
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
 }
 
-/* ACTIVE STATE */
 .reveal-active {
   opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
+  transform: translateY(0);
 }
 
-/* OPTIONAL DELAY (lebih halus dari sebelumnya) */
 .reveal-delay-1 { transition-delay: 80ms; }
 .reveal-delay-2 { transition-delay: 160ms; }
 .reveal-delay-3 { transition-delay: 240ms; }
 .reveal-delay-4 { transition-delay: 320ms; }
 
+/* =============================================
+   HERO ENTRANCE (page-load only)
+   ============================================= */
 .hero-fade {
   opacity: 0;
   transform: translateY(20px);
-  animation: heroFade 0.8s ease forwards;
+  animation: heroFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.hero-fade.delay-1 { animation-delay: 0.15s; }
-.hero-fade.delay-2 { animation-delay: 0.3s; }
-.hero-fade.delay-3 { animation-delay: 0.45s; }
+.hero-fade.delay-1 { animation-delay: 0.12s; }
+.hero-fade.delay-2 { animation-delay: 0.24s; }
+.hero-fade.delay-3 { animation-delay: 0.36s; }
 
 @keyframes heroFade {
   to {
@@ -47,14 +47,16 @@
   }
 }
 
+/* =============================================
+   INTERACTIVE CARD (cursor glow)
+   ============================================= */
 .jb-card {
   position: relative;
   overflow: hidden;
   transition:
     transform 0.28s ease,
     border-color 0.28s ease,
-    background 0.28s ease,
-    box-shadow 0.28s ease;
+    background 0.28s ease;
 }
 
 .jb-card::before {
@@ -66,16 +68,14 @@
   background:
     radial-gradient(
       500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(245, 247, 251, 0.16),
+      rgba(245, 247, 251, 0.12),
       transparent 40%
     );
   transition: opacity 0.28s ease;
 }
 
 .jb-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(245, 247, 251, 0.42);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  border-color: rgba(245, 247, 251, 0.25);
 }
 
 .jb-card:hover::before {
@@ -85,4 +85,48 @@
 .jb-card > * {
   position: relative;
   z-index: 1;
+}
+
+/* =============================================
+   PAGE TRANSITION
+   ============================================= */
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* =============================================
+   REDUCED MOTION
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-fade {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    transition: none;
+  }
+
+  .page-enter-active,
+  .page-leave-active {
+    transition: none;
+  }
+
+  .page-enter-from,
+  .page-leave-to {
+    opacity: 1;
+    transform: none;
+  }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-transparent text-jogo-light font-sans overflow-hidden">
+  <div class="min-h-screen bg-transparent text-jogo-light overflow-hidden">
     <HomeHeroSection />
     <HomeNewsScheduleSection />
     <HomeHashtagGuide />

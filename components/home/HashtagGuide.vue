@@ -1,111 +1,88 @@
 <template>
-  <section id="hashtag-guide" class="relative bg-transparent border-t border-jogo-light/10 py-16 md:py-24 overflow-hidden">
-    <div class="absolute inset-0 blueprint-grid pointer-events-none"></div>
-    <div class="absolute left-0 top-0 w-full h-px bg-gradient-to-r from-transparent via-jogo-light/40 to-transparent"></div>
-    <div class="absolute -left-32 top-24 w-80 h-80 bg-jogo-light/5 rounded-full blur-3xl"></div>
-    <div class="absolute -right-32 bottom-24 w-80 h-80 bg-jogo-light/5 rounded-full blur-3xl"></div>
+  <section id="hashtag-guide" class="relative border-t border-white/[0.06] py-20 md:py-28 overflow-hidden">
 
-    <div class="container mx-auto px-4 relative z-10">
-      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
-        <div class="max-w-3xl">
-          <p class="text-[10px] md:text-xs uppercase tracking-[0.4em] text-jogo-light/55 mb-3">
-            Jogo Bonita Playbook
-          </p>
-
-          <h2 class="font-accent text-5xl md:text-7xl leading-none mb-5">
+    <div class="mx-auto max-w-[1400px] px-5 md:px-8 relative z-10">
+      
+      <!-- Section header -->
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14">
+        <div class="max-w-xl">
+          <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-3">
             Hashtag Guide
           </h2>
-
-          <p class="text-sm md:text-base text-jogo-light/70 leading-relaxed max-w-2xl">
+          <p class="text-sm text-white/50 leading-relaxed">
             Panduan hashtag untuk menjaga dukungan tetap rapi, hangat, dan punya identitas yang sama di setiap momen Bella.
           </p>
         </div>
 
-        <div class="rounded-2xl border border-jogo-light/15 bg-jogo-light/5 px-5 py-4 backdrop-blur-md">
-          <p class="text-[10px] uppercase tracking-[0.28em] text-jogo-light/45 mb-1">
-            Total Tags
-          </p>
-          <p class="text-3xl font-black">
-            {{ hashtagGuides.length }}
-          </p>
+        <div class="flex items-center gap-3">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-white/30">Total Tags</span>
+          <span class="text-2xl font-extrabold text-white">{{ hashtagGuides.length }}</span>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
+      <!-- Hashtag grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
         <component
           :is="item.tag === '#Bellastseen' ? 'a' : 'article'"
           v-for="(item, index) in hashtagGuides"
           :key="item.tag"
           :href="item.tag === '#Bellastseen' ? 'https://x.com/Jogobonita_/status/2058428087931695548?s=20' : undefined"
           :target="item.tag === '#Bellastseen' ? '_blank' : undefined"
-          class="reveal jb-card group rounded-2xl border border-jogo-light/15 bg-gradient-to-br from-jogo-light/10 via-jogo-light/5 to-transparent p-6 md:p-7 min-h-[230px] transition duration-300"
+          class="reveal jb-card group rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 md:p-7 min-h-[210px] transition-colors duration-300 hover:border-white/[0.12] hover:bg-white/[0.04]"
           :class="[
             `reveal-delay-${(index % 4) + 1}`,
             item.tag === '#Bellastseen' ? 'cursor-pointer block' : ''
           ]"
         >
-          <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-jogo-light/60 to-transparent"></div>
-
-          <span class="absolute -right-4 -bottom-10 text-[9rem] font-black leading-none text-jogo-light/5 select-none group-hover:text-jogo-light/10 transition">
-            #
-          </span>
-
           <div class="relative z-10 h-full flex flex-col">
-            <div class="flex items-start justify-between gap-4 mb-8">
-              <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-jogo-light/55">
+            <div class="flex items-start justify-between gap-4 mb-6">
+              <span class="text-[10px] font-mono uppercase tracking-[0.18em] text-white/35">
                 {{ item.category }}
               </span>
-
-              <span class="text-[10px] font-bold px-2.5 py-1 rounded-full border border-jogo-light/20 text-jogo-light/55">
+              <span class="text-[10px] font-mono text-white/25 tabular-nums">
                 {{ String(index + 1).padStart(2, '0') }}
               </span>
             </div>
 
-            <h3 class="font-bold text-2xl md:text-3xl tracking-tight mb-4 group-hover:underline decoration-jogo-light/40 underline-offset-4">
+            <h3 class="font-bold text-xl md:text-2xl tracking-tight mb-3 text-white group-hover:text-teal-400 transition-colors duration-300">
               {{ item.tag }}
             </h3>
 
-            <p class="text-sm md:text-[15px] leading-relaxed text-jogo-light/70">
+            <p class="text-sm leading-relaxed text-white/50 flex-1">
               {{ item.description }}
             </p>
 
-            <div class="mt-auto pt-7">
+            <div class="mt-6 pt-4 border-t border-white/[0.04]">
               <button
                 type="button"
-                class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-jogo-light/50 group-hover:text-jogo-light transition"
+                class="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35 group-hover:text-teal-400/70 transition-colors"
                 @click="copyHashtag(item.tag)"
               >
                 Copy Tag
-                <span>→</span>
+                <span class="transition-transform group-hover:translate-x-0.5">&rarr;</span>
               </button>
             </div>
           </div>
         </component>
       </div>
 
-      <div class="mt-10 rounded-2xl border border-jogo-light/15 bg-jogo-light/5 p-6 md:p-8 relative overflow-hidden">
-        <div class="absolute right-4 top-2 text-[7rem] font-black leading-none text-jogo-light/5 select-none">
-          #
-        </div>
-
-        <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+      <!-- Reminder strip -->
+      <div class="mt-10 rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 md:p-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
           <div>
-            <p class="text-[10px] uppercase tracking-[0.3em] text-jogo-light/50 mb-2">
-              Reminder
-            </p>
-
-            <h3 class="text-2xl md:text-3xl font-bold mb-2">
+            <h3 class="text-lg md:text-xl font-bold text-white mb-1.5">
               Pakai sesuai konteks, jaga tetap positif.
             </h3>
-
-            <p class="text-sm text-jogo-light/65 leading-relaxed max-w-2xl">
+            <p class="text-sm text-white/45 leading-relaxed max-w-xl">
               Setiap hashtag dibuat sebagai identitas dukungan. Gunakan untuk apresiasi, interaksi, review, dan momen kebersamaan Jogo Bonita.
             </p>
           </div>
 
-          <p class="shrink-0 rounded-full border border-jogo-light/20 px-5 py-3 text-[10px] font-black uppercase tracking-[0.22em] text-jogo-light/60">
+          <span class="shrink-0 rounded-xl border border-white/[0.08] px-5 py-3 text-[10px] font-mono font-semibold uppercase tracking-[0.18em] text-white/40 transition-colors"
+            :class="copiedTag ? 'border-teal-400/30 text-teal-400/70' : ''"
+          >
             {{ copiedTag ? `${copiedTag} copied` : 'Support Bella' }}
-          </p>
+          </span>
         </div>
       </div>
     </div>
@@ -218,15 +195,3 @@ onMounted(() => {
   elements.forEach((el) => observer.observe(el))
 })
 </script>
-
-<style scoped>
-.blueprint-grid {
-  opacity: 0.06;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.55) 1px, transparent 1px);
-  background-size: 36px 36px;
-  mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
-}
-</style>
-

@@ -1,11 +1,12 @@
 <template>
-  <div class="min-h-screen bg-jogo-void text-jogo-light relative selection:bg-jogo-cyan selection:text-jogo-void z-0 overflow-x-hidden">
+  <div class="min-h-screen bg-jogo-void text-jogo-light relative selection:bg-teal-500/30 selection:text-white z-0 overflow-x-hidden">
     
+    <!-- Aurora background blobs -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-      <div class="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-tr from-jogo-cyan/25 to-jogo-teal/15 blur-[140px] animate-aurora-1"></div>
-      <div class="absolute top-[35%] -right-[15%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-blue-600/20 via-jogo-glass/40 to-transparent blur-[160px] animate-aurora-2"></div>
-      <div class="absolute -bottom-[10%] left-[20%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-r from-jogo-teal/20 to-emerald-400/10 blur-[150px] animate-aurora-3"></div>
-      <div class="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none bg-repeat bg-noise-texture"></div>
+      <div class="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-tr from-jogo-cyan/20 to-jogo-teal/10 blur-[140px] animate-aurora-1"></div>
+      <div class="absolute top-[35%] -right-[15%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-blue-600/15 via-jogo-glass/30 to-transparent blur-[160px] animate-aurora-2"></div>
+      <div class="absolute -bottom-[10%] left-[20%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-r from-jogo-teal/15 to-emerald-400/8 blur-[150px] animate-aurora-3"></div>
+      <div class="absolute inset-0 opacity-[0.025] mix-blend-overlay pointer-events-none bg-repeat bg-noise-texture"></div>
     </div>
 
     <NuxtLayout>
