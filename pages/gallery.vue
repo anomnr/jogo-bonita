@@ -94,7 +94,11 @@ const rawGallery = [
   { url: '/images/christabella_bonita5.jpg', title: 'Instagram', date: '03 Jun 26', location: 'Cafe', category: 'Photograph' },
   { url: '/images/christabella_bonita6.jpg', title: 'Instagram', date: '03 Jun 26', location: 'Cafe', category: 'Photograph' },
   { url: '/images/christabella_bonita7.jpg', title: 'Instagram', date: '03 Jun 26', location: 'Cafe', category: 'Photograph' },
-  { url: '/images/christabella_bonita8.jpg', title: 'Instagram', date: '03 Jun 26', location: 'Cafe', category: 'Photograph' }
+  { url: '/images/christabella_bonita8.jpg', title: 'Instagram', date: '03 Jun 26', location: 'Cafe', category: 'Photograph' },
+  { url: '/images/christabella_bonita9.jpg', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { url: '/images/christabella_bonita10.jpg', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { url: '/images/christabella_bonita11.jpg', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { url: '/images/christabella_bonita12.jpg', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' }
 ]
 
 // Create an asymmetrical bento grid by assigning custom span classes to specific indices
@@ -112,6 +116,10 @@ const enrichedGallery = computed(() => {
     else if (index === 6) spanClass = 'md:col-span-4'
     else if (index === 7) spanClass = 'md:col-span-5'
     else if (index === 8) spanClass = 'md:col-span-4'
+    else if (index === 9) spanClass = 'md:col-span-3 md:row-span-2'
+    else if (index === 10) spanClass = 'md:col-span-5'
+    else if (index === 11) spanClass = 'md:col-span-4'
+    else if (index === 12) spanClass = 'md:col-span-4 md:row-span-2'
     
     return { ...photo, spanClass }
   })
