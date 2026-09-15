@@ -13,12 +13,10 @@
             class="group/portrait relative rounded-2xl overflow-hidden aspect-[3/4] bg-jogo-void
                    border border-white/[0.08] border-t-white/[0.25] border-l-white/[0.15]"
           >
-            <img
-              src="/images/christabella_bonita.jpg"
+            <SecureImage
+              imageId="christabella_bonita"
               alt="Christabella Bonita — Trainee JKT48 Gen 14"
-              class="w-full h-full object-cover transition-all duration-700
-                     ease-[cubic-bezier(0.16,1,0.3,1)]
-                     group-hover/portrait:scale-110"
+              class="w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/portrait:scale-110"
               loading="eager"
             />
             <!-- Gradient scrim at bottom -->
@@ -384,7 +382,7 @@ const milestones = [
     badge: 'Debut',
     title: 'Pengumuman Generasi 14',
     desc: 'Resmi diperkenalkan sebagai anggota Generasi 14 JKT48. Dari kursi penonton ke atas panggung — mimpi yang jadi kenyataan.',
-    images: ['/images/christabella_bonita1.jpg', '/images/christabella_bonita2.jpg']
+    images: ['https://res.cloudinary.com/ilac24r7/image/upload/v1789025439/christabella_bonita1.jpg', 'https://res.cloudinary.com/ilac24r7/image/upload/v1789025439/christabella_bonita2.jpg']
   },
   {
     kicker: 'Mei 2026',
@@ -398,7 +396,7 @@ const milestones = [
     badge: null,
     title: 'Unit Song: Junjou Shugi & Jean Da Arc',
     desc: 'Membuktikan kualitas performanya lewat posisi center di "Junjou Shugi" dan tampil memukau di "Kagami no Naka no Jean Da Arc".',
-    images: ['/images/christabella_bonita3.jpg']
+    images: ['https://res.cloudinary.com/ilac24r7/image/upload/v1789025439/christabella_bonita3.jpg']
   },
   {
     kicker: 'Juli 2026',
@@ -418,11 +416,11 @@ const milestones = [
 
 // ─── GALLERY ───
 const galleryPhotos = [
-  { src: '/images/christabella_bonita4.jpg', alt: 'Bella portrait 1', span: 'row-span-2 aspect-[3/5]' },
-  { src: '/images/christabella_bonita5.jpg', alt: 'Bella portrait 2', span: 'aspect-square' },
-  { src: '/images/christabella_bonita6.jpg', alt: 'Bella portrait 3', span: 'aspect-square' },
-  { src: '/images/christabella_bonita7.jpg', alt: 'Bella portrait 4', span: 'aspect-square' },
-  { src: '/images/christabella_bonita8.jpg', alt: 'Bella portrait 5', span: 'aspect-square' }
+  { src: 'https://res.cloudinary.com/ilac24r7/image/upload/v1789025440/christabella_bonita4.jpg', alt: 'Bella portrait 1', span: 'row-span-2 aspect-[3/5]' },
+  { src: 'https://res.cloudinary.com/ilac24r7/image/upload/v1789025440/christabella_bonita5.jpg', alt: 'Bella portrait 2', span: 'aspect-square' },
+  { src: 'https://res.cloudinary.com/ilac24r7/image/upload/v1789025439/christabella_bonita6.jpg', alt: 'Bella portrait 3', span: 'aspect-square' },
+  { src: 'https://res.cloudinary.com/ilac24r7/image/upload/v1789025439/christabella_bonita7.jpg', alt: 'Bella portrait 4', span: 'aspect-square' },
+  { src: 'https://res.cloudinary.com/ilac24r7/image/upload/v1789025440/christabella_bonita8.jpg', alt: 'Bella portrait 5', span: 'aspect-square' }
 ]
 
 // ─── INTERSECTION OBSERVER ───

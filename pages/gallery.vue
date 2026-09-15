@@ -31,9 +31,9 @@
         >
           <!-- Background Image with Ken Burns effect -->
           <div class="absolute inset-0 w-full h-full transform transition-transform duration-[1.2s] ease-out group-hover:scale-[1.05]">
-            <img 
-              :src="photo.url" 
-              :alt="photo.title" 
+            <SecureImage
+              :imageId="photo.imageId"
+              :alt="photo.title"
               class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
               loading="lazy"
             />
@@ -86,19 +86,19 @@
 import { computed, onMounted } from 'vue'
 
 const rawGallery = [
-  { url: '/images/christabella_bonita.jpg', title: 'Kabesha', date: '14 Feb 26', location: 'JKT48 Theater', category: 'Photograph' },
-  { url: '/images/christabella_bonita1.jpg', title: 'Instagram', date: '13 Mei 26', location: 'JKT48 Theater', category: 'Photograph' },
-  { url: '/images/christabella_bonita2.jpg', title: 'Instagram', date: '13 Mei 26', location: 'JKT48 Theater', category: 'Photograph' },
-  { url: '/images/christabella_bonita3.jpg', title: 'Instagram', date: '27 Mei 26', location: 'JKT48 Theater', category: 'Photograph' },
-  { url: '/images/christabella_bonita4.jpg', title: 'Instagram', date: '27 Mei 26', location: 'JKT48 Theater', category: 'Photograph' },
-  { url: '/images/christabella_bonita5.jpg', title: 'Instagram', date: '03 Jun 26', location: 'Cafe', category: 'Photograph' },
-  { url: '/images/christabella_bonita6.jpg', title: 'Instagram', date: '03 Jun 26', location: 'Cafe', category: 'Photograph' },
-  { url: '/images/christabella_bonita7.jpg', title: 'Instagram', date: '03 Jun 26', location: 'Cafe', category: 'Photograph' },
-  { url: '/images/christabella_bonita8.jpg', title: 'Instagram', date: '03 Jun 26', location: 'Cafe', category: 'Photograph' },
-  { url: '/images/christabella_bonita9.jpg', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
-  { url: '/images/christabella_bonita10.jpg', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
-  { url: '/images/christabella_bonita11.jpg', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
-  { url: '/images/christabella_bonita12.jpg', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' }
+  { imageId: 'christabella_bonita',   title: 'Kabesha',   date: '14 Feb 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { imageId: 'christabella_bonita1',  title: 'Instagram', date: '13 Mei 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { imageId: 'christabella_bonita2',  title: 'Instagram', date: '13 Mei 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { imageId: 'christabella_bonita3',  title: 'Instagram', date: '27 Mei 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { imageId: 'christabella_bonita4',  title: 'Instagram', date: '27 Mei 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { imageId: 'christabella_bonita5',  title: 'Instagram', date: '03 Jun 26', location: 'Cafe',          category: 'Photograph' },
+  { imageId: 'christabella_bonita6',  title: 'Instagram', date: '03 Jun 26', location: 'Cafe',          category: 'Photograph' },
+  { imageId: 'christabella_bonita7',  title: 'Instagram', date: '03 Jun 26', location: 'Cafe',          category: 'Photograph' },
+  { imageId: 'christabella_bonita8',  title: 'Instagram', date: '03 Jun 26', location: 'Cafe',          category: 'Photograph' },
+  { imageId: 'christabella_bonita9',  title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { imageId: 'christabella_bonita10', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { imageId: 'christabella_bonita11', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { imageId: 'christabella_bonita12', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' }
 ]
 
 // Create an asymmetrical bento grid by assigning custom span classes to specific indices

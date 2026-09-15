@@ -22,5 +22,12 @@ export default defineNuxtConfig({
     }
   },
 
+  // Private server-side Cloudinary credentials — never exposed to the client
+  runtimeConfig: {
+    cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+    cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
+  },
+
   compatibilityDate: '2024-04-19'
 })
