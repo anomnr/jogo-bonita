@@ -98,7 +98,10 @@ const rawGallery = [
   { imageId: 'christabella_bonita9',  title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
   { imageId: 'christabella_bonita10', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
   { imageId: 'christabella_bonita11', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
-  { imageId: 'christabella_bonita12', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' }
+  { imageId: 'christabella_bonita12', title: 'Instagram', date: '04 Jul 26', location: 'JKT48 Theater', category: 'Photograph' },
+  { imageId: 'photobook',  title: 'photobook', date: '09 Jun 26', location: 'ICE BSD',                category: 'Photograph' },
+  { imageId: 'photobook1', title: 'photobook', date: '16 Jul 26', location: 'Tennis Indoor Senayan',   category: 'Photograph' },
+  { imageId: 'photobook2', title: 'photobook', date: '13 Sep 26', location: 'Studio',                  category: 'Photograph' }
 ]
 
 // Create an asymmetrical bento grid by assigning custom span classes to specific indices
