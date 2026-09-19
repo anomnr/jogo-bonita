@@ -1,246 +1,279 @@
 <template>
-  <main class="mx-auto max-w-[1400px] px-5 md:px-8 py-16 text-white selection:bg-teal-500/30 selection:text-white">
-    
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      
-      <!-- NEWS COLUMN -->
-      <div class="lg:col-span-7">
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-white/[0.06] pb-5 mb-8 gap-4">
+  <main class="mx-auto max-w-[1400px] px-5 py-16 text-white md:px-8 md:py-24">
+
+    <div class="grid grid-cols-1 items-start gap-14 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-16">
+
+      <!-- ============================================================ -->
+      <!-- NEWS                                                          -->
+      <!-- ============================================================ -->
+      <section>
+        <div class="mb-8 flex items-end justify-between gap-4 border-b border-white/[0.06] pb-5">
           <div>
-            <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white">Berita Terbaru</h2>
+            <span class="mb-1.5 block text-[10px] font-mono uppercase tracking-[0.25em] text-jogo-cyan/70">Transmisi</span>
+            <h2 class="text-2xl font-extrabold tracking-tight text-white md:text-3xl">Berita Terbaru</h2>
           </div>
-          <NuxtLink to="/news" class="text-[11px] font-mono text-white/40 hover:text-white transition-colors flex items-center gap-1.5 font-medium">
-            Lihat Semua &rarr;
-          </NuxtLink>
-        </div>
-
-        <div class="space-y-3">
           <NuxtLink
-            v-for="item in latestNews"
-            :key="item.id"
-            :to="`/news/${item.slug}`"
-            class="flex flex-col md:flex-row items-start md:items-center gap-4 p-5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-teal-400/30 hover:bg-white/[0.04] transition-all duration-300 cursor-pointer group/news"
+            to="/news"
+            class="group flex shrink-0 items-center gap-1.5 text-[11px] font-mono font-medium text-white/40 transition-colors hover:text-white"
           >
-            <div class="flex items-center gap-3 md:w-1/3 shrink-0">
-              <span class="text-[9px] font-mono font-semibold px-2.5 py-1 bg-white/[0.06] border border-white/[0.08] text-white/70 rounded-lg uppercase tracking-widest group-hover/news:border-teal-400/30 transition-colors">
-                {{ item.category }}
-              </span>
-              <span class="text-xs font-mono text-white/40">
-                {{ new Date(item.created_at).toLocaleDateString('id-ID') }}
-              </span>
+            Lihat Semua
+            <ArrowUpRight :size="13" :stroke-width="2" class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </NuxtLink>
+        </div>
+
+        <!-- Error -->
+        <div v-if="newsError" class="py-12">
+          <p class="text-[11px] font-mono tracking-wide text-white/45">Transmisi berita gagal dimuat.</p>
+          <button type="button" class="retry mt-3" @click="fetchNews">
+            <RotateCw :size="12" :stroke-width="2" />
+            Coba lagi
+          </button>
+        </div>
+
+        <!-- Loading -->
+        <div v-else-if="pendingNews" class="space-y-6">
+          <div class="skeleton aspect-[16/7] w-full rounded-2xl"></div>
+          <div class="space-y-5 border-t border-white/[0.06] pt-5">
+            <div v-for="n in 3" :key="n" class="space-y-2.5">
+              <div class="skeleton h-2 w-32 rounded-full"></div>
+              <div class="skeleton h-3.5 rounded-full" :style="{ width: 88 - n * 9 + '%' }"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty -->
+        <div v-else-if="latestNews.length === 0" class="py-14">
+          <p class="text-sm font-semibold text-white/70">Belum ada transmisi.</p>
+          <p class="mt-1.5 text-[11px] font-mono tracking-wide text-white/35">
+            Berita terbaru akan muncul di sini begitu dipublikasikan.
+          </p>
+        </div>
+
+        <!-- Data: one lead story, then a divided list -->
+        <div v-else>
+          <NuxtLink v-if="leadStory" :to="`/news/${leadStory.slug}`" class="group block">
+            <div
+              v-if="leadStory.image_url && !leadImageFailed"
+              class="relative mb-5 aspect-[16/7] overflow-hidden rounded-2xl border border-white/[0.07]"
+            >
+              <img
+                :src="leadStory.image_url"
+                :alt="leadStory.title"
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                @error="leadImageFailed = true"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-jogo-void/80 via-transparent to-transparent"></div>
             </div>
 
-            <p class="text-sm md:text-base font-semibold group-hover/news:text-teal-400 transition-colors flex-1 leading-snug">
-              {{ item.title }}
+            <div class="flex items-center gap-3">
+              <span class="tag">{{ leadStory.category }}</span>
+              <span class="text-[11px] font-mono tracking-wide text-white/40">{{ formatShort(leadStory.created_at) }}</span>
+            </div>
+
+            <h3 class="mt-3 text-xl font-extrabold leading-snug tracking-tight text-white transition-colors duration-300 group-hover:text-jogo-cyan md:text-2xl">
+              {{ leadStory.title }}
+            </h3>
+
+            <p v-if="leadStory.excerpt" class="mt-2.5 max-w-[62ch] text-sm leading-relaxed text-white/50">
+              {{ leadStory.excerpt }}
             </p>
           </NuxtLink>
 
-          <div
-            v-if="latestNews.length === 0"
-            class="py-14 text-center border border-dashed border-white/[0.08] rounded-xl"
-          >
-            <p class="text-[11px] font-mono text-white/40 tracking-wide">Belum ada transmisi berita terbaru.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- SIDEBAR -->
-      <div class="lg:col-span-5 flex flex-col gap-6">
-        
-        <!-- Upcoming schedule -->
-        <div class="rounded-xl border border-white/[0.06] bg-white/[0.02] p-7 md:p-8 flex flex-col min-h-[300px]">
-          <div class="flex items-center justify-between border-b border-white/[0.06] pb-4 mb-6">
-            <div>
-              <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-teal-400/70 block mb-1">Upcoming</span>
-              <h2 class="text-xl font-extrabold tracking-tight">Misi Terdekat</h2>
-            </div>
-          </div>
-
-          <!-- Loading state -->
-          <div v-if="pendingSchedules" class="flex-1 flex items-center justify-center text-[11px] font-mono text-white/40 animate-pulse">
-            Menyelaraskan jadwal...
-          </div>
-
-          <!-- Empty state -->
-          <div v-else-if="upcomingSchedules.length === 0" class="flex-1 flex flex-col items-center justify-center text-center py-6">
-            <p class="text-[11px] font-mono text-white/35 tracking-wide">Jadwal belum tersedia.</p>
-          </div>
-
-          <!-- Schedule card -->
-          <div v-else class="flex-1 flex flex-col justify-between">
-            <div>
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-teal-400/[0.06] border border-teal-400/[0.12] mb-4">
-                <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
-                <span class="text-[9px] font-mono tracking-widest uppercase text-teal-400 font-semibold">
-                  {{ upcomingSchedules[0].type === 'SHOW' ? 'Show Utama' : 'Event' }}
-                </span>
-              </div>
-              
-              <h3 class="text-2xl md:text-3xl font-extrabold leading-tight mb-2 text-white tracking-tight">
-                {{ upcomingSchedules[0].event_name }}
-              </h3>
-              <p class="text-xs font-mono text-white/50 tracking-wide">
-                {{ formatDate(upcomingSchedules[0].date_time) }}
-              </p>
-            </div>
-
-            <div class="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-white/50">
-              <p class="flex items-center gap-2">
-                <span class="text-teal-400/60">&#x2022;</span> {{ upcomingSchedules[0].location }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- ============================================ -->
-        <!-- COUNTDOWN #MenantiBella                      -->
-        <!-- ============================================ -->
-        <div class="rounded-xl border border-white/[0.06] bg-white/[0.02] p-7 md:p-8 relative overflow-hidden">
-          <!-- Subtle aurora glow behind the section -->
-          <div class="absolute inset-0 pointer-events-none">
-            <div class="absolute -top-6 -right-6 w-40 h-40 rounded-full bg-gradient-to-br from-jogo-cyan/10 to-jogo-teal/5 blur-2xl"></div>
-          </div>
-
-          <div class="relative z-10">
-            <!-- Header -->
-            <div class="border-b border-white/[0.06] pb-4 mb-6">
-              <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-jogo-cyan/70 block mb-1">#MenantiBella</span>
-              <h2 class="text-xl font-extrabold tracking-tight">Menuju 16 Tahun Bella</h2>
-            </div>
-
-            <!-- Copywriting -->
-            <p class="text-xs text-white/45 leading-relaxed mb-6 font-mono">
-              Setiap detik adalah bentuk kesetiaan.<br/>
-              Kami menunggu hari Bella memiliki ruangnya sendiri.
-            </p>
-
-            <!-- Countdown grid -->
-            <div class="grid grid-cols-4 gap-2 mb-5">
-              <div
-                v-for="unit in countdownUnits"
-                :key="unit.label"
-                class="flex flex-col items-center gap-1.5"
-              >
-                <!-- Number box -->
-                <div class="w-full aspect-square flex items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.07] relative overflow-hidden">
-                  <!-- Shimmer line at top -->
-                  <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-                  <span
-                    class="text-xl md:text-2xl font-extrabold tabular-nums tracking-tight text-white transition-all duration-300"
-                    :class="unit.value !== unit.prevValue ? 'countdown-flip' : ''"
-                  >
-                    {{ String(unit.value).padStart(2, '0') }}
-                  </span>
+          <div v-if="restStories.length" class="mt-8 divide-y divide-white/[0.06] border-t border-white/[0.06]">
+            <NuxtLink
+              v-for="item in restStories"
+              :key="item.id"
+              :to="`/news/${item.slug}`"
+              class="group flex items-start gap-5 py-5 transition-colors duration-300"
+            >
+              <div class="flex min-w-0 flex-1 flex-col gap-2">
+                <div class="flex items-center gap-3">
+                  <span class="tag">{{ item.category }}</span>
+                  <span class="text-[11px] font-mono tracking-wide text-white/35">{{ formatShort(item.created_at) }}</span>
                 </div>
-                <!-- Label -->
-                <span class="text-[9px] font-mono uppercase tracking-[0.18em] text-white/30">{{ unit.label }}</span>
+                <p class="text-sm font-semibold leading-snug text-white/85 transition-colors duration-300 group-hover:text-jogo-cyan md:text-base">
+                  {{ item.title }}
+                </p>
               </div>
-            </div>
-
-            <!-- Target date -->
-            <div class="flex items-center gap-2 pt-4 border-t border-white/[0.06]">
-              <span class="w-1 h-1 rounded-full bg-jogo-cyan/60 animate-pulse flex-shrink-0"></span>
-              <span class="text-[10px] font-mono text-white/30 tracking-wide">Target: 2 Maret 2027</span>
-            </div>
+              <ArrowUpRight
+                :size="15"
+                :stroke-width="2"
+                class="mt-1 shrink-0 text-white/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-jogo-cyan"
+              />
+            </NuxtLink>
           </div>
         </div>
+      </section>
 
-        <!-- Community CTA -->
-        <NuxtLink
-          to="/contact"
-          class="block rounded-xl border border-white/[0.06] bg-white/[0.02] p-7 md:p-8 group hover:border-white/[0.12] transition-colors duration-300"
-        >
-          <div class="text-center">
-            <span class="font-accent text-3xl text-white group-hover:text-teal-400 transition-colors duration-300 block mb-2">
-              Join Jogo Bonita
-            </span>
-            <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-white/35">
-              Mari Menjaga Dalam Senyap
-            </p>
+      <!-- ============================================================ -->
+      <!-- SIDEBAR - three panels, three different constructions        -->
+      <!-- ============================================================ -->
+      <div class="flex flex-col gap-14">
+
+        <!-- 1. A bordered container: a discrete, upcoming object -->
+        <section class="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] md:p-7">
+          <div class="mb-5 flex items-center justify-between">
+            <span class="text-[10px] font-mono uppercase tracking-[0.25em] text-jogo-cyan/70">Upcoming</span>
+            <span v-if="upcomingSchedules.length" class="live-dot h-1.5 w-1.5 rounded-full bg-jogo-cyan"></span>
           </div>
-        </NuxtLink>
 
+          <div v-if="schedulesError">
+            <p class="text-[11px] font-mono tracking-wide text-white/45">Jadwal gagal dimuat.</p>
+            <button type="button" class="retry mt-3" @click="fetchSchedules">
+              <RotateCw :size="12" :stroke-width="2" />
+              Coba lagi
+            </button>
+          </div>
+
+          <div v-else-if="pendingSchedules" class="space-y-3">
+            <div class="skeleton h-2.5 w-20 rounded-full"></div>
+            <div class="skeleton h-6 w-full rounded-full"></div>
+            <div class="skeleton h-2.5 w-2/3 rounded-full"></div>
+          </div>
+
+          <div v-else-if="upcomingSchedules.length === 0">
+            <p class="text-sm font-semibold text-white/70">Jadwal belum tersedia.</p>
+            <p class="mt-1.5 text-[11px] font-mono tracking-wide text-white/35">Misi berikutnya akan tayang begitu diumumkan.</p>
+          </div>
+
+          <div v-else-if="nextMission">
+            <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-white/45">
+              {{ nextMission.type === 'SHOW' ? 'Show Utama' : 'Event' }}
+            </span>
+            <h3 class="mt-2 text-xl font-extrabold leading-tight tracking-tight text-white md:text-2xl">
+              {{ nextMission.event_name }}
+            </h3>
+            <dl class="mt-5 space-y-2.5 border-t border-white/[0.06] pt-4 text-[11px] font-mono tracking-wide text-white/50">
+              <div class="flex items-center gap-2.5">
+                <CalendarDays :size="13" :stroke-width="2" class="shrink-0 text-white/30" />
+                <dd>{{ formatDate(nextMission.date_time) }}</dd>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <MapPin :size="13" :stroke-width="2" class="shrink-0 text-white/30" />
+                <dd>{{ nextMission.location }}</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+
+        <!-- 2. No container at all: the countdown carries itself typographically -->
+        <section>
+          <div class="border-b border-white/[0.06] pb-4">
+            <span class="mb-1.5 block text-[10px] font-mono uppercase tracking-[0.25em] text-jogo-cyan/70">#MenantiBella</span>
+            <h2 class="text-xl font-extrabold tracking-tight text-white">Menuju 16 Tahun Bella</h2>
+          </div>
+
+          <p class="mt-5 text-xs leading-relaxed text-white/45">
+            Setiap detik adalah bentuk kesetiaan.<br />
+            Kami menunggu hari Bella memiliki ruangnya sendiri.
+          </p>
+
+          <!-- Visual digits are decorative; the sr-only line below carries the
+               meaning so screen readers are not re-announced every second. -->
+          <div class="mt-7 flex items-end" aria-hidden="true">
+            <div
+              v-for="(unit, index) in countdownUnits"
+              :key="unit.label"
+              class="flex flex-col pr-5 sm:pr-6"
+              :class="[
+                index > 0 && 'border-l border-white/[0.08] pl-5 sm:pl-6',
+                unit.minor && 'opacity-45'
+              ]"
+            >
+              <span
+                :key="unit.value"
+                class="font-extrabold leading-none tracking-tight tabular-nums text-white"
+                :class="unit.minor ? 'text-xl' : 'text-3xl md:text-4xl countdown-flip'"
+              >
+                {{ String(unit.value).padStart(2, '0') }}
+              </span>
+              <span class="mt-2 text-[9px] font-mono uppercase tracking-[0.2em] text-white/35">
+                {{ unit.label }}
+              </span>
+            </div>
+          </div>
+
+          <p class="sr-only">{{ countdownSummary }}</p>
+
+          <p class="mt-6 border-t border-white/[0.06] pt-4 text-[10px] font-mono tracking-wide text-white/30">
+            Target: 2 Maret 2027
+          </p>
+        </section>
+
+        <!-- 3. Flattest of the three: a hairline and a line of script -->
+        <NuxtLink to="/contact" class="group block border-t border-white/[0.08] pt-6">
+          <span class="block font-accent text-3xl leading-none text-white transition-colors duration-300 group-hover:text-jogo-cyan">
+            Join Jogo Bonita
+          </span>
+          <span class="mt-2.5 flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.2em] text-white/35">
+            Mari Menjaga Dalam Senyap
+            <ArrowUpRight :size="12" :stroke-width="2" class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </span>
+        </NuxtLink>
       </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- RECAP SHOW CAROUSEL                          -->
-    <!-- ============================================ -->
-    <div class="mt-14 md:mt-20">
-      <!-- Section header -->
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-white/[0.06] pb-5 mb-8 gap-4">
+    <!-- ============================================================ -->
+    <!-- RECAP CAROUSEL                                                -->
+    <!-- ============================================================ -->
+    <section class="mt-20 md:mt-28">
+      <div class="mb-8 flex flex-col justify-between gap-4 border-b border-white/[0.06] pb-5 sm:flex-row sm:items-end">
         <div>
-          <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-teal-400/70 block mb-1">Histori</span>
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white">Recap Show</h2>
+          <span class="mb-1.5 block text-[10px] font-mono uppercase tracking-[0.25em] text-jogo-cyan/70">Histori</span>
+          <h2 class="text-2xl font-extrabold tracking-tight text-white md:text-3xl">Recap Show</h2>
         </div>
 
         <div v-if="pastShows.length > 0" class="flex items-center gap-4 self-start sm:self-auto">
-          <span class="text-[11px] font-mono text-white/30 tabular-nums">
+          <span class="text-[11px] font-mono tabular-nums text-white/30">
             {{ String(activeIndex + 1).padStart(2, '0') }} / {{ String(pastShows.length).padStart(2, '0') }}
           </span>
-          <div class="hidden sm:flex items-center gap-2">
-            <button
-              type="button"
-              aria-label="Sebelumnya"
-              :disabled="!canScrollLeft"
-              @click="scrollByCard(-1)"
-              class="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center text-white/50 hover:text-teal-400 hover:border-teal-400/30 hover:bg-teal-400/[0.06] active:scale-[0.92] disabled:opacity-25 disabled:pointer-events-none transition-all duration-300"
-            >
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-              </svg>
+          <div class="hidden items-center gap-2 sm:flex">
+            <button type="button" aria-label="Sebelumnya" :disabled="!canScrollLeft" class="nav-btn" @click="scrollByCard(-1)">
+              <ChevronLeft :size="16" :stroke-width="2" />
             </button>
-            <button
-              type="button"
-              aria-label="Selanjutnya"
-              :disabled="!canScrollRight"
-              @click="scrollByCard(1)"
-              class="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center text-white/50 hover:text-teal-400 hover:border-teal-400/30 hover:bg-teal-400/[0.06] active:scale-[0.92] disabled:opacity-25 disabled:pointer-events-none transition-all duration-300"
-            >
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-              </svg>
+            <button type="button" aria-label="Selanjutnya" :disabled="!canScrollRight" class="nav-btn" @click="scrollByCard(1)">
+              <ChevronRight :size="16" :stroke-width="2" />
             </button>
           </div>
         </div>
       </div>
 
+      <!-- Error -->
+      <div v-if="pastShowsError" class="py-12">
+        <p class="text-[11px] font-mono tracking-wide text-white/45">Rekap show gagal dimuat.</p>
+        <button type="button" class="retry mt-3" @click="fetchPastShows">
+          <RotateCw :size="12" :stroke-width="2" />
+          Coba lagi
+        </button>
+      </div>
+
       <!-- Loading -->
-      <div v-if="pendingPastShows" class="flex gap-5 overflow-hidden pb-6">
-        <div
-          v-for="n in 4"
-          :key="n"
-          class="shrink-0 w-[240px] sm:w-[280px] h-[220px] rounded-[1.5rem] border border-white/[0.06] bg-white/[0.03] animate-pulse"
-        ></div>
+      <div v-else-if="pendingPastShows" class="flex gap-5 overflow-hidden pb-6">
+        <div v-for="n in 4" :key="n" class="skeleton h-[220px] w-[240px] shrink-0 rounded-2xl sm:w-[280px]"></div>
       </div>
 
       <!-- Empty -->
-      <div
-        v-else-if="pastShows.length === 0"
-        class="py-14 text-center border border-dashed border-white/[0.08] rounded-xl"
-      >
-        <p class="text-[11px] font-mono text-white/35 tracking-wide">Belum ada rekap show yang tersimpan.</p>
+      <div v-else-if="pastShows.length === 0" class="py-14">
+        <p class="text-sm font-semibold text-white/70">Belum ada rekap show.</p>
+        <p class="mt-1.5 text-[11px] font-mono tracking-wide text-white/35">Riwayat show akan terkumpul di sini seiring waktu.</p>
       </div>
 
       <!-- Carousel -->
-      <div
-        v-else
-        class="relative"
-      >
-        <!-- Fade edges -->
+      <div v-else class="relative">
         <div
-          class="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-jogo-void to-transparent z-10 pointer-events-none transition-opacity duration-300"
+          class="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-jogo-void to-transparent transition-opacity duration-300"
           :class="canScrollLeft ? 'opacity-100' : 'opacity-0'"
         ></div>
         <div
-          class="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-jogo-void to-transparent z-10 pointer-events-none transition-opacity duration-300"
+          class="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-jogo-void to-transparent transition-opacity duration-300"
           :class="canScrollRight ? 'opacity-100' : 'opacity-0'"
         ></div>
 
-        <!-- Scrollable track -->
         <div
           ref="carouselRef"
-          class="flex gap-5 overflow-x-auto pb-2 snap-x snap-mandatory recap-carousel select-none"
+          class="recap-carousel flex select-none gap-5 overflow-x-auto pb-2 snap-x snap-mandatory"
           :class="isDragging ? 'scroll-auto cursor-grabbing' : 'scroll-smooth cursor-grab'"
           @scroll="handleCarouselScroll"
           @pointerdown="onDragStart"
@@ -248,66 +281,54 @@
           @pointerup="onDragEnd"
           @pointerleave="onDragEnd"
         >
-          <div
+          <article
             v-for="(show, index) in pastShows"
             :key="show.id"
-            class="snap-start shrink-0 w-[240px] sm:w-[280px] rounded-[1.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] p-6 flex flex-col gap-5 hover:-translate-y-1.5 hover:border-teal-400/30 hover:bg-white/[0.06] hover:shadow-[0_20px_40px_-15px_rgba(45,212,191,0.18)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group/card relative overflow-hidden"
+            class="group/card relative flex w-[240px] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1.5 hover:border-jogo-cyan/25 hover:bg-white/[0.04] sm:w-[280px]"
           >
-            <!-- Liquid background glow on hover -->
-            <div class="absolute inset-0 bg-gradient-to-br from-teal-400/10 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-
-            <!-- Ghost numeral watermark -->
-            <span class="absolute -top-3 -right-2 text-[5.5rem] font-extrabold leading-none text-white/[0.04] group-hover/card:text-teal-400/[0.08] transition-colors duration-500 select-none pointer-events-none tabular-nums">
+            <span
+              class="pointer-events-none absolute -right-2 -top-3 select-none text-[5.5rem] font-extrabold leading-none tabular-nums text-white/[0.04] transition-colors duration-500 group-hover/card:text-jogo-cyan/[0.07]"
+              aria-hidden="true"
+            >
               {{ String(index + 1).padStart(2, '0') }}
             </span>
 
-            <!-- Header row -->
-            <div class="flex items-center justify-between relative z-10">
-              <span class="text-[10px] font-mono font-extrabold px-2.5 py-1 rounded-lg bg-teal-400/[0.08] border border-teal-400/[0.2] text-teal-400 tracking-widest uppercase shadow-[inset_0_1px_0_rgba(45,212,191,0.2)]">
-                Show ke-{{ index + 1 }}
-              </span>
-              <div class="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/10 flex items-center justify-center group-hover/card:border-teal-400/40 group-hover/card:bg-teal-400/10 transition-all duration-500">
-                <svg class="w-3.5 h-3.5 text-teal-400/70 group-hover/card:text-teal-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 9 10.5-3m0 6.553v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 1 1-.99-3.467l2.31-.66a2.25 2.25 0 0 0 1.632-2.163Zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 0 1-.99-3.467l2.31-.66A2.25 2.25 0 0 0 9 15.553Z" />
-                </svg>
-              </div>
-            </div>
+            <span class="relative z-10 self-start text-[10px] font-mono uppercase tracking-[0.2em] text-white/45">
+              Show ke-{{ index + 1 }}
+            </span>
 
-            <!-- Setlist title -->
-            <h3 class="text-lg md:text-xl font-extrabold text-white leading-tight tracking-tight group-hover/card:text-teal-400 transition-colors duration-300 relative z-10 flex-1 flex items-center">
+            <h3 class="relative z-10 my-8 text-lg font-extrabold leading-tight tracking-tight text-white transition-colors duration-300 group-hover/card:text-jogo-cyan md:text-xl">
               {{ show.title }}
             </h3>
 
-            <!-- Date -->
-            <div class="pt-4 border-t border-white/[0.06] relative z-10">
-              <span class="text-[11px] font-mono text-white/40 tracking-wide flex items-center gap-2">
-                <span class="w-1 h-1 rounded-full bg-white/20 group-hover/card:bg-teal-400/50 transition-colors"></span>
-                {{ formatDate(show.date) }}
-              </span>
-            </div>
-          </div>
+            <span class="relative z-10 flex items-center gap-2 border-t border-white/[0.06] pt-4 text-[11px] font-mono tracking-wide text-white/40">
+              <CalendarDays :size="12" :stroke-width="2" class="shrink-0 text-white/25" />
+              {{ formatDate(show.date) }}
+            </span>
+          </article>
         </div>
 
-        <!-- Scroll progress bar -->
-        <div class="mt-4 h-[3px] w-full rounded-full bg-white/[0.05] overflow-hidden">
+        <!-- Progress: transform only, never width -->
+        <div class="mt-4 h-[3px] w-full overflow-hidden rounded-full bg-white/[0.05]">
           <div
-            class="h-full rounded-full bg-gradient-to-r from-teal-400/70 to-teal-300 transition-[width,transform] duration-150 ease-out"
-            :style="{ width: progressWidth + '%', transform: `translateX(${progressOffset}%)` }"
+            class="h-full w-full origin-left rounded-full bg-jogo-cyan/50 transition-transform duration-150 ease-out"
+            :style="{ transform: `translateX(${progressShift}%) scaleX(${progressScale})` }"
           ></div>
         </div>
       </div>
-    </div>
+    </section>
 
   </main>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ArrowUpRight, CalendarDays, ChevronLeft, ChevronRight, MapPin, RotateCw } from 'lucide-vue-next'
 
 const supabase = useSupabaseClient()
 
 // ==========================================
-// LOGIKA BERITA (NEWS)
+// BERITA (NEWS)
 // ==========================================
 type NewsItem = {
   id: string
@@ -322,8 +343,19 @@ type NewsItem = {
 }
 
 const latestNews = ref<NewsItem[]>([])
+const pendingNews = ref(true)
+const newsError = ref(false)
+const leadImageFailed = ref(false)
+
+// Newest item leads; the rest read as a compact index below it.
+const leadStory = computed(() => latestNews.value[0] ?? null)
+const restStories = computed(() => latestNews.value.slice(1))
 
 const fetchNews = async () => {
+  pendingNews.value = true
+  newsError.value = false
+  leadImageFailed.value = false
+
   const { data, error } = await supabase
     .from('news')
     .select('id, title, slug, category, excerpt, image_url, source_url, published, created_at')
@@ -333,13 +365,17 @@ const fetchNews = async () => {
 
   if (error) {
     console.error('FETCH NEWS ERROR:', error)
+    newsError.value = true
+    pendingNews.value = false
     return
   }
+
   latestNews.value = data || []
+  pendingNews.value = false
 }
 
 // ==========================================
-// LOGIKA JADWAL (HANYA MENAMPILKAN 1 TERDEKAT)
+// JADWAL (hanya 1 terdekat)
 // ==========================================
 type ScheduleItem = {
   id: string
@@ -351,6 +387,9 @@ type ScheduleItem = {
 
 const upcomingSchedules = ref<ScheduleItem[]>([])
 const pendingSchedules = ref(true)
+const schedulesError = ref(false)
+
+const nextMission = computed(() => upcomingSchedules.value[0])
 
 const getTodayLocalDate = () => {
   const now = new Date()
@@ -362,16 +401,18 @@ const getTodayLocalDate = () => {
 
 const fetchSchedules = async () => {
   pendingSchedules.value = true
-  const todayString = getTodayLocalDate()
+  schedulesError.value = false
+
   const { data, error } = await supabase
     .from('shows')
     .select('id, date, type, title, source')
-    .gte('date', todayString)
+    .gte('date', getTodayLocalDate())
     .order('date', { ascending: true })
-    .limit(1) // Kita limit 1 saja karena tidak pakai slider lagi
+    .limit(1)
 
   if (error) {
     console.error('FETCH SCHEDULES ERROR:', error)
+    schedulesError.value = true
     pendingSchedules.value = false
     return
   }
@@ -386,14 +427,18 @@ const fetchSchedules = async () => {
   pendingSchedules.value = false
 }
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('id-ID', {
+const formatDate = (dateString: string) =>
+  new Date(dateString).toLocaleDateString('id-ID', {
     weekday: 'long', day: 'numeric', month: 'short', year: 'numeric'
   })
-}
+
+const formatShort = (dateString: string) =>
+  new Date(dateString).toLocaleDateString('id-ID', {
+    day: 'numeric', month: 'short', year: 'numeric'
+  })
 
 // ==========================================
-// LOGIKA RECAP SHOW (HISTORI SHOW LALU)
+// RECAP SHOW
 // ==========================================
 type PastShow = {
   id: string
@@ -404,14 +449,14 @@ type PastShow = {
 
 const pastShows = ref<PastShow[]>([])
 const pendingPastShows = ref(true)
+const pastShowsError = ref(false)
 const carouselRef = ref<HTMLElement | null>(null)
 
-// Carousel navigation state
 const activeIndex = ref(0)
 const canScrollLeft = ref(false)
 const canScrollRight = ref(false)
-const progressWidth = ref(0)
-const progressOffset = ref(0)
+const progressScale = ref(1)
+const progressShift = ref(0)
 
 const CARD_GAP = 20 // px, matches gap-5
 
@@ -432,10 +477,12 @@ const handleCarouselScroll = () => {
   const cardWidth = getCardWidth()
   activeIndex.value = cardWidth ? Math.round(track.scrollLeft / cardWidth) : 0
 
-  const visibleRatio = maxScroll > 0 ? track.clientWidth / track.scrollWidth : 1
-  progressWidth.value = Math.min(100, visibleRatio * 100)
-  progressOffset.value = maxScroll > 0
-    ? (track.scrollLeft / maxScroll) * (100 - progressWidth.value)
+  // scaleX + translateX instead of animating width, so the bar stays on the
+  // compositor. translateX is relative to the thumb's own (unscaled) width.
+  const ratio = maxScroll > 0 ? track.clientWidth / track.scrollWidth : 1
+  progressScale.value = Math.min(1, ratio)
+  progressShift.value = maxScroll > 0
+    ? (track.scrollLeft / maxScroll) * (1 - progressScale.value) * 100
     : 0
 }
 
@@ -462,8 +509,7 @@ const onDragStart = (event: PointerEvent) => {
 const onDragMove = (event: PointerEvent) => {
   const track = carouselRef.value
   if (!track || !isDragging.value) return
-  const delta = event.clientX - dragStartX
-  track.scrollLeft = dragStartScrollLeft - delta
+  track.scrollLeft = dragStartScrollLeft - (event.clientX - dragStartX)
 }
 
 const onDragEnd = (event: PointerEvent) => {
@@ -477,16 +523,18 @@ const onDragEnd = (event: PointerEvent) => {
 
 const fetchPastShows = async () => {
   pendingPastShows.value = true
-  const todayString = getTodayLocalDate()
+  pastShowsError.value = false
+
   const { data, error } = await supabase
     .from('shows')
     .select('id, date, type, title')
     .eq('type', 'SHOW')
-    .lt('date', todayString)
+    .lt('date', getTodayLocalDate())
     .order('date', { ascending: true })
 
   if (error) {
     console.error('FETCH PAST SHOWS ERROR:', error)
+    pastShowsError.value = true
     pendingPastShows.value = false
     return
   }
@@ -499,7 +547,7 @@ const fetchPastShows = async () => {
 }
 
 // ==========================================
-// LOGIKA COUNTDOWN #MenantiBella
+// COUNTDOWN #MenantiBella
 // ==========================================
 // Target: 2 Maret 2027 00:00:00 WIB (UTC+7)
 const TARGET_DATE = new Date('2027-03-02T00:00:00+07:00').getTime()
@@ -507,42 +555,42 @@ const TARGET_DATE = new Date('2027-03-02T00:00:00+07:00').getTime()
 type CountdownUnit = {
   label: string
   value: number
-  prevValue: number
+  /** Seconds carry the least meaning to someone checking in once a day. */
+  minor?: boolean
 }
 
 const countdownUnits = ref<CountdownUnit[]>([
-  { label: 'Hari',   value: 0, prevValue: 0 },
-  { label: 'Jam',    value: 0, prevValue: 0 },
-  { label: 'Menit',  value: 0, prevValue: 0 },
-  { label: 'Detik',  value: 0, prevValue: 0 },
+  { label: 'Hari', value: 0 },
+  { label: 'Jam', value: 0 },
+  { label: 'Menit', value: 0 },
+  { label: 'Detik', value: 0, minor: true }
 ])
+
+// Coarse, day-level text for assistive tech — it does not tick.
+const countdownSummary = computed(
+  () => `Tersisa ${countdownUnits.value[0]?.value ?? 0} hari menuju 2 Maret 2027.`
+)
 
 let countdownInterval: ReturnType<typeof setInterval> | null = null
 
 const updateCountdown = () => {
-  const now = Date.now()
-  const diff = Math.max(0, TARGET_DATE - now)
-
+  const diff = Math.max(0, TARGET_DATE - Date.now())
   const totalSeconds = Math.floor(diff / 1000)
-  const days    = Math.floor(totalSeconds / 86400)
-  const hours   = Math.floor((totalSeconds % 86400) / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
 
-  const newValues = [days, hours, minutes, seconds]
+  const next = [
+    Math.floor(totalSeconds / 86400),
+    Math.floor((totalSeconds % 86400) / 3600),
+    Math.floor((totalSeconds % 3600) / 60),
+    totalSeconds % 60
+  ]
 
   countdownUnits.value.forEach((unit, i) => {
-    unit.prevValue = unit.value
-    unit.value = newValues[i]
+    unit.value = next[i] ?? 0
   })
 }
 
 onMounted(async () => {
-  await Promise.all([
-    fetchNews(),
-    fetchSchedules(),
-    fetchPastShows(),
-  ])
+  await Promise.all([fetchNews(), fetchSchedules(), fetchPastShows()])
 
   updateCountdown()
   countdownInterval = setInterval(updateCountdown, 1000)
@@ -554,6 +602,115 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.tag {
+  font-size: 9px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.group:hover .tag {
+  border-color: rgba(0, 242, 254, 0.28);
+  color: rgba(0, 242, 254, 0.85);
+}
+
+.retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 7px 14px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.retry:hover {
+  color: #00f2fe;
+  border-color: rgba(0, 242, 254, 0.3);
+}
+
+.retry:active {
+  transform: scale(0.97);
+}
+
+.nav-btn {
+  display: flex;
+  height: 36px;
+  width: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-btn:hover:not(:disabled) {
+  color: #00f2fe;
+  border-color: rgba(0, 242, 254, 0.3);
+}
+
+.nav-btn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.nav-btn:disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* Skeletons match the real layout's footprint rather than spinning. */
+.skeleton {
+  background: rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.live-dot {
+  position: relative;
+}
+
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  animation: ping 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes ping {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  70%, 100% { transform: scale(1.9); opacity: 0; }
+}
+
 /* Custom scrollbar for recap carousel */
 .recap-carousel::-webkit-scrollbar {
   height: 4px;
@@ -566,16 +723,24 @@ onUnmounted(() => {
   border-radius: 99px;
 }
 .recap-carousel::-webkit-scrollbar-thumb:hover {
-  background: rgba(79, 172, 254, 0.25);
+  background: rgba(0, 242, 254, 0.25);
 }
 
-/* Flip animation for countdown digits on change */
+/* Keyed digits remount on change, so the animation actually replays. */
 @keyframes flip-in {
-  0%   { transform: translateY(-8px); opacity: 0; }
-  100% { transform: translateY(0px);  opacity: 1; }
+  0% { transform: translateY(-8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
 .countdown-flip {
-  animation: flip-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: flip-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .countdown-flip,
+  .skeleton::after,
+  .live-dot::after {
+    animation: none;
+  }
 }
 </style>
